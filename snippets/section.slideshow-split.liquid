@@ -171,6 +171,12 @@
         }
       }
 
+      {%- comment -%}
+        Custom (Divya, Oct 2026): per-section button colors.
+        Uses the "Button color" / "Button text color" settings from sections/slideshow-split.liquid.
+        Scoped to this section only, so other buttons on the site keep the theme's global button color.
+        If the setting is empty, nothing is output and the theme default is used.
+      {%- endcomment -%}
       {%- if section.settings.button_color != blank -%}
         .hero--{{ section.id }} .element-button {
           --element-button-color-primary: {{ section.settings.button_color }};

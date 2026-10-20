@@ -11,6 +11,13 @@
   display: none !important;
 }
 
+/*
+  Custom (Divya, Oct 2026): removed a rule here that forced the home page hero
+  ([id$='__slideshow-split']) buttons to the sale-tag color (orange) with !important.
+  Hero button colors are now set in the theme editor: Home page > hero section >
+  "Button color" / "Button text color". See docs/hero-button-color.md.
+*/
+
 @media only screen and (min-width: 769px) {
   .header-wrapper--compressed .site-header__element--sub[data-type='nav'] {
     display: block;
