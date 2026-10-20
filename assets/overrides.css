@@ -11,14 +11,6 @@
   display: none !important;
 }
 
-[id$='__slideshow-split'] .element-button:not(.element-button--transparent) {
-  --element-button-color-primary: var(--color-sale-tag);
-  --element-button-color-secondary: var(--color-sale-tag-text);
-  background-color: var(--color-sale-tag) !important;
-  border-color: var(--color-sale-tag) !important;
-  color: var(--color-sale-tag-text) !important;
-}
-
 @media only screen and (min-width: 769px) {
   .header-wrapper--compressed .site-header__element--sub[data-type='nav'] {
     display: block;
