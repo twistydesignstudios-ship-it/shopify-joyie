@@ -170,6 +170,15 @@
           height: {{ height_mobile }}px;
         }
       }
+
+      {%- if section.settings.button_color != blank -%}
+        .hero--{{ section.id }} .element-button {
+          --element-button-color-primary: {{ section.settings.button_color }};
+          {%- if section.settings.button_text_color != blank %}
+          --element-button-color-secondary: {{ section.settings.button_text_color }};
+          {%- endif %}
+        }
+      {%- endif -%}
     {% endstyle %}
 
     <div id="SlideshowWrapper-{{ section.id }}">
