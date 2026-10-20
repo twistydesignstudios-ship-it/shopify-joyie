@@ -1,0 +1,794 @@
+{% doc %}
+  Copyright © 2025 Archetype Themes LP. All rights reserved.
+
+  Site footer with menu links, newsletter signup, copyright, and social icons.
+
+  @param {boolean} [show_newsletter] - Display newsletter form
+  @param {string} [newsletter_richtext] - Newsletter form text
+  @param {boolean} [footer_main_menu] - Show main menu on mobile
+  @param {boolean} [show_copyright] - Display copyright text
+  @param {string} [copyright_text] - Custom copyright text
+  @param {object} [policies_menu] - Policies menu object
+  @param {boolean} [show_wave] - Display wave background decoration
+  @param {string} [newsletter_card_color_scheme] - Color scheme for the newsletter card
+
+  @example
+  {% render 'section.footer', show_newsletter: true, show_copyright: true %}
+{% enddoc %}
+
+{% stylesheet %}
+      .site-footer {
+        display: block;
+        font-size: calc(var(--element-text-font-size--body-md) - 1px);
+
+        & .faux-select {
+          font-size: calc(var(--element-text-font-size--body-md) - 1px);
+          min-width: max-content;
+        }
+      }
+
+      .footer__section {
+        padding: 30px 0;
+        border-top: 1px solid;
+        border-top-color: color-mix(in srgb, var(--color-primary) var(--shade-12), var(--color-secondary));
+
+        .site-footer:not(:has([data-type='menu'])) & {
+          padding-top: 0;
+          border-top-width: 0;
+        }
+      }
+
+      @media only screen and (min-width: 769px) {
+        .footer__section--menus {
+          padding-top: 50px;
+        }
+      }
+
+      /* Mimic a standalone section on mobile */
+      @media only screen and (max-width: 768px) {
+        .footer__mobile-section {
+          margin-left: calc(var(--page-width-padding) * -1);
+          margin-right: calc(var(--page-width-padding) * -1);
+          padding: 20px var(--page-width-padding) 0;
+          border-top: 1px solid;
+        }
+      }
+
+      .footer__title {
+        margin-bottom: 15px;
+      }
+
+      .footer__subscribe {
+        font-weight: var(--element-text-font-weight--heading);
+        font-size: calc(var(--element-text-font-size--body-md) + 2px);
+      }
+
+      .footer__menu {
+        margin: 0 0 20px;
+        padding: 0;
+        list-style: none;
+
+        @media only screen and (max-width: 768px) {
+          margin-bottom: 0;
+        }
+
+        & li {
+          margin: 0;
+        }
+
+        & a {
+          display: inline-block;
+          padding: 4px 0;
+        }
+
+        & .element-icon {
+          margin-right: 10px;
+
+          [dir='rtl'] & {
+            margin-right: 0;
+            margin-left: 10px;
+          }
+        }
+      }
+
+      .footer__menu--underline a {
+        text-decoration: underline;
+        text-underline-offset: 2px;
+      }
+
+      .footer__blocks {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 20px;
+      }
+
+      .footer__block {
+        flex: 0 1 25%;
+        max-width: 210px;
+      }
+
+      @media only screen and (max-width: 768px) {
+        .footer__blocks--mobile {
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: center;
+        }
+
+        .footer__block,
+        .footer__block--mobile {
+          max-width: none;
+          flex: 1 1 50%;
+        }
+
+        .footer__block[data-type='payment'],
+        .footer__block[data-type='contact'] {
+          flex: 1 0 100%;
+        }
+
+        & .multi-selectors--footer .multi-selectors__item {
+          margin: 0;
+        }
+      }
+
+      .payment-icons {
+        user-select: none;
+        cursor: default;
+        margin-bottom: 20px;
+
+        @media only screen and (max-width: 768px) {
+          margin-bottom: 0;
+        }
+
+        & li {
+          cursor: default;
+          margin: 0 8px 4px 0;
+        }
+      }
+
+      /* Footer of the footer */
+      .footer__base-links {
+        font-size: 13px;
+
+        & a,
+        & span {
+          display: inline-block;
+          padding: 2px 20px 2px 0;
+        }
+
+        & a {
+          text-decoration: underline;
+          text-underline-offset: 2px;
+        }
+      }
+
+      /* ==========================================================================
+         Migrated from old theme: custom footer (panel layout, newsletter card,
+         contact cards, partner links, menu columns, bottom bar)
+         ========================================================================== */
+
+      .site-footer--panel-layout,
+      .footer__section--newsletter-card {
+        --footer-panel-border: rgb(0 0 0 / 16%);
+        --footer-bar-bg: #c65029;
+        --footer-bar-text: #fff;
+      }
+
+      #FooterMobileNavWrap.hide {
+        display: none;
+      }
+
+      /* Bottom bar (copyright / policies) */
+      .site-footer--panel-layout .footer__section {
+        border-top-color: var(--footer-panel-border);
+      }
+
+      .site-footer--panel-layout > .footer__section:last-child {
+        background-color: var(--footer-bar-bg);
+        border-top-color: var(--footer-bar-bg);
+        color: var(--footer-bar-text);
+        padding: 20px 0;
+
+        & a {
+          color: var(--footer-bar-text);
+        }
+      }
+
+      /* Contact items: phone/email with notes, address */
+      .footer__contact-copy {
+        display: flex;
+        flex-direction: column;
+        line-height: 1.35;
+
+        & strong {
+          font-weight: 700;
+        }
+
+        & > span {
+          opacity: 0.7;
+        }
+      }
+
+      .footer__menu .icon-pin {
+        flex: 0 0 auto;
+        width: 20px;
+        height: 20px;
+        fill: none;
+        stroke: currentColor;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+        stroke-width: 2px;
+      }
+
+      .icon-and-text > svg {
+        flex: 0 0 auto;
+      }
+
+      /* Social */
+      .footer__social {
+        margin: 0;
+      }
+
+      .footer__social li {
+        display: inline-block;
+        margin: 0 15px 15px 0;
+      }
+
+      .footer__social a {
+        display: block;
+      }
+
+      .footer__social svg {
+        width: 21px;
+        height: 21px;
+      }
+
+      /* Partner links */
+      .site-footer--panel-layout .footer__partner {
+        margin-top: 22px;
+      }
+
+      .site-footer--panel-layout .footer__partner-links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 14px;
+
+        & a {
+          align-items: center;
+          border: 1px solid var(--footer-panel-border) !important;
+          border-radius: 8px;
+          display: flex;
+          justify-content: center;
+          min-height: 50px;
+          padding: 10px 16px;
+          text-decoration: none;
+        }
+
+        & a:hover {
+          border-color: currentColor;
+          text-decoration: none;
+        }
+      }
+
+      /* Newsletter card */
+      /*
+        Card sits half outside / half inside the footer background.
+        The top padding strip stays transparent (background-clip: content-box),
+        the footer color only starts below it, and the card is pulled up
+        into that strip with a negative margin. No transform / overflow,
+        so nothing gets clipped or collapsed.
+      */
+      .footer__section--newsletter-card {
+        --newsletter-space-above: 100px; /* transparent strip above footer color */
+        --newsletter-overlap: 30px;      /* how much of the card sits outside the footer color */
+        --newsletter-space-below: 30px;  /* gap between card and the menus border */
+      }
+
+      .footer__section.footer__section--newsletter-card {
+        display: flow-root;
+        position: relative;
+        margin-top: 0;
+        padding: var(--newsletter-space-above) 0 0;
+        border-top-width: 0;
+        background-clip: content-box;
+      }
+
+      /* Wrapper div = the card */
+      .footer__section--newsletter-card .footer__newsletter {
+        background-color: var(--color-secondary);
+        color: var(--color-primary);
+        border: 1px solid var(--footer-panel-border);
+        border-radius: 8px;
+        padding: 28px 32px;
+        transform: translateY(-40%);
+        z-index: 2;
+      }
+
+      /* layout.stack inside the card = text + form row */
+      .footer__section--newsletter-card .footer__newsletter-stack {
+        width: 100%;
+        gap: 40px;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+
+      .footer__section--newsletter-card .footer__newsletter-stack .footer__subscribe {
+        flex: 1 1 52%;
+        font-size: 24px;
+        font-weight: normal;
+        padding: 0;
+        text-align: left;
+
+        & p {
+          margin: 0;
+        }
+      }
+
+      .footer__section--newsletter-card .footer__newsletter-stack > :not(.footer__subscribe) {
+        flex: 1 1 48%;
+        margin: 0;
+        padding: 0;
+        width: 100%;
+      }
+
+      .footer__section--newsletter-card :is(.newsletter__input-group, .input-group) {
+        gap: 16px;
+        max-width: 100%;
+        margin-bottom: 0;
+      }
+
+      .footer__section--newsletter-card :is(.newsletter__input, input[type='email']) {
+        background: transparent;
+        border: 1px solid var(--footer-panel-border);
+        border-radius: 999px !important;
+        min-height: 47px;
+        padding: 12px 28px;
+        width: 100%;
+      }
+
+      .footer__section--newsletter-card :is(.btn, button[type='submit']) {
+        border-radius: 999px !important;
+        min-height: 47px;
+        padding-left: 30px;
+        padding-right: 30px;
+      }
+
+
+    .footer__section--newsletter-card .footer__newsletter .footer__subscribe {
+      flex: 1 1 52%;
+        font-size: 24px;
+        font-weight: 400;
+        padding: 0;
+        margin: 0;
+        text-align: left;
+        color: #000;
+        letter-spacing: 0.7px;
+        line-height: 33.6px;
+    }
+
+    .footer__section--newsletter-card .footer__newsletter .footer__subscribe p {
+      margin: 0;
+    }
+
+
+      @media only screen and (min-width: 769px) {
+        .site-footer--panel-layout .footer__section--menus {
+          padding: 0;
+        }
+
+        .site-footer--panel-layout .footer__blocks {
+          display: grid;
+          gap: 0;
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+          justify-content: stretch;
+        }
+
+        .site-footer--panel-layout .footer__block {
+          border-right: 1px solid var(--footer-panel-border);
+          flex: none;
+          max-width: none;
+          min-width: 0;
+          padding: 45px clamp(28px, 2vw, 66px);
+        }
+
+        .site-footer--panel-layout .footer__block:nth-child(3n) {
+          border-right: 0;
+        }
+
+        .site-footer--panel-layout .footer__block:first-child {
+          padding-left: 0;
+        }
+
+        .site-footer--panel-layout .footer__block:last-child {
+          padding-right: 0;
+        }
+
+        .site-footer--panel-layout .footer__title {
+          margin-bottom: 18px;
+        }
+
+        /* Menu: 1 / 2 columns */
+        .site-footer--panel-layout .footer__block[data-type='menu'] .footer__menu {
+          display: grid;
+          gap: 15px 20px;
+          grid-template-columns: 1fr;
+          margin: 0;
+        }
+
+        .site-footer--panel-layout .footer__block[data-type='menu'].footer__block--menu-columns-2 .footer__menu {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .site-footer--panel-layout .footer__block[data-type='menu'] .footer__menu a {
+          align-items: center;
+          border: 1px solid var(--footer-panel-border);
+          border-radius: 8px;
+          display: flex;
+          min-height: 50px;
+          padding: 14px 13px;
+          width: 100%;
+        }
+
+        /* Contact */
+        .site-footer--panel-layout .footer__block[data-type='contact'] .footer__mobile-section,
+        .site-footer--panel-layout .footer__block[data-type='contact'] .footer__blocks--mobile {
+          display: contents;
+        }
+
+        .site-footer--panel-layout .footer__block[data-type='contact'] .footer__block--mobile {
+          max-width: none;
+        }
+
+        .site-footer--panel-layout .footer__block[data-type='contact'] .footer__menu {
+          display: grid;
+          gap: 16px;
+          margin: 0 0 16px;
+        }
+
+        .site-footer--panel-layout .footer__block[data-type='contact'] .footer__menu a,
+        .site-footer--panel-layout .footer__block[data-type='contact'] .footer__contact-card {
+          align-items: center;
+          border: 1px solid var(--footer-panel-border);
+          border-radius: 8px;
+          display: flex;
+          min-height: 50px;
+          padding: 14px 13px;
+          width: 100%;
+        }
+
+        .site-footer--panel-layout .footer__block[data-type='contact'] .footer__menu a,
+        .site-footer--panel-layout .footer__block[data-type='contact'] .footer__menu a:hover {
+          text-decoration: none;
+        }
+
+        /* Social */
+        .site-footer--panel-layout :is(.footer__social, .footer__social > ul) {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 14px;
+        }
+
+        .site-footer--panel-layout .footer__social li {
+          margin: 0;
+        }
+
+        .site-footer--panel-layout .footer__social a {
+          align-items: center;
+          border: 1px solid var(--footer-panel-border) !important;
+          border-radius: 8px;
+          display: flex;
+          height: 50px;
+          justify-content: center;
+          width: 65px;
+        }
+      }
+
+      @media only screen and (max-width: 968px) {
+        .footer__contact-copy {
+          font-size: 14px;
+        }
+          .site-footer--panel-layout .footer__block[data-type=menu] .footer__menu a {
+            font-size: 12px;
+        }
+        .site-footer--panel-layout .footer__partner-links a {
+          font-size: 14px;
+          }
+        }
+
+
+      @media only screen and (max-width: 768px) {
+        .site-footer--panel-layout .footer__section--menus {
+          padding: 0;
+        }
+
+        .site-footer--panel-layout .footer__blocks {
+          gap: 0;
+        }
+
+        .site-footer--panel-layout .footer__block {
+          border-bottom: 1px solid var(--footer-panel-border);
+          flex-basis: 100%;
+          padding: 28px 0;
+        }
+
+        .site-footer--panel-layout .footer__block:last-child {
+          border-bottom: 0;
+        }
+
+        .site-footer--panel-layout .footer__title {
+          margin-bottom: 16px;
+        }
+
+        /* Contact */
+        .site-footer--panel-layout .footer__block[data-type='contact'] .footer__mobile-section {
+          border-top: 0;
+          margin: 0;
+          padding: 0;
+        }
+
+        .site-footer--panel-layout .footer__block[data-type='contact'] .footer__blocks--mobile,
+        .site-footer--panel-layout .footer__block[data-type='contact'] .footer__block--mobile {
+          display: block;
+          max-width: none;
+          width: 100%;
+        }
+
+        .site-footer--panel-layout .footer__block[data-type='contact'] .footer__menu {
+          display: grid;
+          gap: 10px;
+          margin: 0 0 16px;
+        }
+
+        .site-footer--panel-layout .footer__block[data-type='contact'] .footer__menu a,
+        .site-footer--panel-layout .footer__block[data-type='contact'] .footer__contact-card {
+          align-items: center;
+          border: 1px solid var(--footer-panel-border);
+          border-radius: 8px;
+          display: flex;
+          min-height: 58px;
+          padding: 12px 14px;
+          text-decoration: none;
+          width: 100%;
+        }
+
+        /* Social */
+        .site-footer--panel-layout :is(.footer__social, .footer__social > ul) {
+          display: grid;
+          gap: 10px;
+          grid-template-columns: repeat(1, minmax(0, 1fr));
+          margin: 0;
+        }
+
+        .site-footer--panel-layout .footer__social li {
+          margin: 0;
+        }
+
+        .site-footer--panel-layout .footer__social a {
+          align-items: center;
+          border: 1px solid var(--footer-panel-border) !important;
+          border-radius: 8px;
+          display: flex;
+          height: 50px;
+          justify-content: center;
+          width: 84px;
+        }
+
+        /* Menu: 1 / 2 columns */
+        .site-footer--panel-layout .footer__block[data-type='menu'] .footer__menu {
+          display: grid;
+          gap: 10px;
+          grid-template-columns: 1fr;
+          margin: 0;
+        }
+
+        .site-footer--panel-layout .footer__block[data-type='menu'].footer__block--menu-columns-2 .footer__menu {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .site-footer--panel-layout .footer__block[data-type='menu'] .footer__menu a {
+          align-items: center;
+          border: 1px solid var(--footer-panel-border);
+          border-radius: 8px;
+          display: flex;
+          min-height: 50px;
+          padding: 10px 12px;
+          text-decoration: none;
+          width: 100%;
+        }
+
+        /* Partner links */
+        .site-footer--panel-layout .footer__partner-links {
+          display: grid;
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+
+          & a {
+            justify-content: flex-start;
+            min-width: 0;
+            padding-left: 8px;
+            padding-right: 8px;
+            text-align: left;
+          }
+        }
+
+        /* Newsletter card */
+        .footer__section--newsletter-card {
+          --newsletter-space-above: 100px;
+          --newsletter-overlap: 50px;
+          --newsletter-space-below: 28px;
+        }
+
+        .footer__section--newsletter-card .footer__newsletter {
+          padding: 20px 16px;
+          text-align: left;
+        }
+
+        .footer__section--newsletter-card .footer__newsletter-stack {
+          flex-wrap: wrap;
+          gap: 20px;
+        }
+
+        .footer__section--newsletter-card .footer__newsletter-stack .footer__subscribe,
+        .footer__section--newsletter-card .footer__newsletter-stack > :not(.footer__subscribe) {
+          flex-basis: 100%;
+          margin: 0;
+        }
+
+        .footer__section--newsletter-card :is(.newsletter__input-group, .input-group) {
+          flex-wrap: wrap;
+          gap: 10px;
+        }
+
+        .footer__section--newsletter-card :is(.input-group-field, .input-group-btn, .btn, input[type='email'], button[type='submit']) {
+          width: 100%;
+        }
+
+         .footer__section--newsletter-card .footer__newsletter > * {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 20px;
+      }
+
+      .footer__section--newsletter-card .footer__newsletter .footer__subscribe,
+      .footer__section--newsletter-card .footer__newsletter > * > :not(.footer__subscribe) {
+        flex-basis: auto;
+        width: 100%;
+      }
+      }
+
+      .site-footer.color-scheme-none,
+  .footer__section--newsletter-card.color-scheme-none,
+  .footer__newsletter.color-scheme-none {
+    --color-primary: var(--root-color-primary);
+    --color-secondary: var(--root-color-secondary);
+    background-color: var(--color-secondary);
+    color: var(--color-primary);
+  }
+{% endstylesheet %}
+
+{%- liquid
+  assign show_newsletter = show_newsletter | default: section.settings.show_newsletter, allow_false: true | default: true, allow_false: true
+  assign newsletter_richtext = newsletter_richtext | default: section.settings.newsletter_richtext
+  assign footer_main_menu = footer_main_menu | default: section.settings.footer_main_menu, allow_false: true | default: true, allow_false: true
+  assign show_copyright = show_copyright | default: section.settings.show_copyright, allow_false: true | default: true, allow_false: true
+  assign copyright_text = copyright_text | default: section.settings.copyright_text
+  assign policies_menu = policies_menu | default: section.settings.policies_menu
+  assign show_wave = show_wave | default: section.settings.show_wave, allow_false: true | default: false, allow_false: true
+  assign hydration = hydration | default: 'on:visible'
+  assign color_scheme = color_scheme | default: section.settings.color_scheme | default: 'none'
+  assign newsletter_card_color_scheme = newsletter_card_color_scheme | default: section.settings.newsletter_card_color_scheme | default: 'none'
+-%}
+
+{%- if show_newsletter -%}
+  <div class="footer__section footer__section--border footer__section--newsletter-card color-scheme-{{ color_scheme }}">
+    <div class="page-width">
+      {%- capture footer_newsletter -%}
+        {%- if newsletter_richtext != blank -%}
+          {%- render 'element.text', as: 'div', variant: 'rte', text: newsletter_richtext, alignment: 'center', classlist: 'footer__subscribe' -%}
+        {%- endif -%}
+
+        {%- render 'form.customer', context: 'footer' -%}
+      {%- endcapture -%}
+
+      <div class="footer__newsletter color-scheme-{{ newsletter_card_color_scheme }}">
+        <div class="footer-new-form">
+          {%- render 'layout.stack',
+            slot: footer_newsletter,
+            horizontal_md: true,
+            justify: 'center',
+            align: 'center',
+            wrap: 'nowrap',
+            justify_md: 'space-between',
+            classlist: 'footer__newsletter-stack',
+            gap_xs: 'sm',
+            gap_md: 'md'
+          -%}
+        </div>
+      </div>
+    </div>
+  </div>
+{%- endif -%}
+
+{% comment %}
+  Main navigation is copied here with JS for mobile users
+{% endcomment %}
+{%- if footer_main_menu -%}
+  <div id="FooterMobileNavWrap" class="footer__section footer__section--border medium-up--hide hide">
+    <div id="FooterMobileNav" class="page-width"></div>
+  </div>
+{%- endif -%}
+
+<is-land {{ hydration }}>
+  <footer-section
+    class="site-footer site-footer--panel-layout color-scheme-{{ color_scheme }}"
+    data-section-id="{{ section.id }}"
+    data-section-type="footer-section"
+    role="contentinfo"
+  >
+    <div
+      id="FooterMenus"
+      class="footer__section footer__section--menus {% if show_wave %}background-svg--wave-reverse{% endif %}"
+    >
+      <div class="page-width">
+        <div class="footer__blocks">
+          {%- for block in section.blocks -%}
+            <div
+              class="footer__block footer__block--{{ block.type }} footer__block--{{ forloop.index }}{% if block.type == 'menu' %} footer__block--menu-columns-{{ block.settings.columns | default: '1' }}{% endif %}"
+              data-type="{{ block.type }}"
+              {% if block.type == 'menu' %}
+                role="navigation"
+                aria-label="{{ block.settings.title | default: linklists[block.settings.menu].title | escape }}"
+              {% endif %}
+              {{ block.shopify_attributes }}
+            >
+              {%- liquid
+                case block.type
+                  when 'menu'
+                    render 'footer-menu', block: block
+                  when 'payment'
+                    render 'footer-payments', block: block
+                  when 'contact'
+                    render 'footer-contact', block: block
+                  when 'image'
+                    render 'footer-image', block: block
+                  when 'follow_shop_cta'
+                    render 'follow-shop-cta'
+                endcase
+              -%}
+            </div>
+          {%- endfor -%}
+        </div>
+      </div>
+    </div>
+
+    <div class="footer__section">
+      <div class="page-width text-center small--text-left">
+        <div class="footer__base-links">
+          {%- if show_copyright -%}
+            <span>
+              &copy; {{ 'now' | date: '%Y' }}
+              {{ shop.name }}
+              {%- if copyright_text != blank -%}
+                {{ copyright_text }}
+              {%- endif -%}
+            </span>
+          {%- endif -%}
+
+          {%- if policies_menu.links.size > 0 -%}
+            {%- for link in policies_menu.links -%}
+              <a href="{{ link.url }}">{{ link.title }}</a>
+            {%- endfor -%}
+          {%- endif -%}
+
+          {{ powered_by_link }}
+        </div>
+      </div>
+    </div>
+  </footer-section>
+
+  <template data-island>
+    <script type="module">
+      import 'section.footer';
+    </script>
+  </template>
+</is-land>

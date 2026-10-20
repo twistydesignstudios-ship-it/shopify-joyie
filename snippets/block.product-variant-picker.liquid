@@ -1,0 +1,100 @@
+{% doc %}
+  Bridges kit's Shopify shopify:product:select event to the theme's legacy
+  `variant:change:{sectionId}:{productId}` event.
+
+  @param {object} product - Product object
+  @param {object} [block] - Block object
+  @param {boolean} [update_url] - Update URL when variant changes, default: true
+
+  @example
+  {% render 'block.product-variant-picker', product: product %}
+{% enddoc %}
+
+{%- liquid
+  assign product = section.settings.product | default: product
+
+  # Legacy Shopify Files PNG swatches — kit needs the option names, not the
+  # detection rule, so hand it the localized trigger word (plus the 'colour'
+  # spelling English merchants use interchangeably).
+  capture legacy_swatch_triggers
+    render 'utility.translate', key: 'trigger.color_swatch', fallback: 'color'
+  endcapture
+  assign legacy_swatch_triggers = legacy_swatch_triggers | downcase | strip
+  if legacy_swatch_triggers == 'color'
+    assign legacy_swatch_triggers = 'color,colour'
+  endif
+-%}
+
+{%- capture size_chart_trigger -%}
+  <a class="tw-size-guide-link" href="#tw-size-guide">
+    {% render 'element.icon', name: 'size-chart' %}
+    <span>See sizes on a wall</span>
+  </a>
+{%- endcapture -%}
+{%- assign size_chart_option_name = block.settings.size_chart_option | default: 'size' -%}
+
+{%- comment -%}
+  The size chart rides in the matched option's legend — kit.product-variant-picker
+  attaches `legend_extra` to the one option named by `legend_extra_option`.
+{%- endcomment -%}
+{%- if block.settings.size_chart != blank and block.settings.size_chart_option != blank and product.has_only_default_variant == false -%}
+  {%- capture size_chart_title -%}
+    {% echo 'labels.size_chart' | t %}
+    {%- render 'element.icon', name: 'size-chart' -%}
+  {%- endcapture -%}
+
+  {%- capture size_chart_trigger -%}
+    {%- render 'overlay.tool-tip.trigger',
+      title: size_chart_title,
+      content: block.settings.size_chart.content,
+      context: 'size-chart'
+    -%}
+  {%- endcapture -%}
+{%- endif -%}
+
+<div id="product-options" class="product-options-anchor" {{ block.shopify_attributes }}>
+  {% render 'kit.product-variant-picker',
+    product: product,
+    picker_type: block.settings.picker_type,
+    show_labels: block.settings.variant_labels,
+    enable_swatches: block.settings.color_swatches,
+    update_url: update_url,
+    legend_extra: size_chart_trigger,
+    legend_extra_option: size_chart_option_name,
+    legacy_swatch_triggers: legacy_swatch_triggers,
+    legacy_swatch_source: 'files'
+  %}
+
+  {%- if size_chart_trigger != blank -%}
+    <script type="module">
+      import 'overlay.tool-tip.trigger'
+    </script>
+  {%- endif -%}
+
+  <script type="module">
+    import 'block.product-variant-picker'
+  </script>
+</div>
+
+{% stylesheet %}
+  .product-options-anchor {
+    scroll-margin-top: 120px;
+  }
+  .tw-size-guide-link span{
+      text-decoration: underline;
+  }
+  .tw-size-guide-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    color: #c65029;
+    font-size: 14px;
+    font-weight: 600;
+    text-underline-offset: 3px;
+
+    & .element-icon {
+      width: 17px;
+      height: 17px;
+    }
+  }
+{% endstylesheet %}

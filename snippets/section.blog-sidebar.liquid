@@ -1,0 +1,154 @@
+{% doc %}
+  Copyright © 2025 Archetype Themes LP. All rights reserved.
+
+  Blog sidebar with recent posts, tags, and navigation.
+
+  @param {object} [blog] - Blog object
+  @param {object} [article] - Current article
+
+  @example
+  {% render 'section.blog-sidebar', blog: blog %}
+{% enddoc %}
+
+{%- liquid
+  assign blog = section.settings.blog | default: blog
+  assign article = section.settings.article | default: article
+-%}
+
+{%- if section.blocks.size == 0 -%}
+  <style>
+    .blog-layout__sidebar {
+      display: none;
+    }
+  </style>
+{%- endif -%}
+
+{%- for block in section.blocks -%}
+  {%- case block.type -%}
+    {%- when 'article' -%}
+      <div class="theme-block" {{ block.shopify_attributes }}>
+        {%- if block.settings.title != blank -%}
+          <h4>{{ block.settings.title }}</h4>
+        {%- endif -%}
+
+        {%- render 'list.article-card',
+          article: block.settings.article,
+          show_tags: block.settings.blog_show_tags,
+          show_date: block.settings.blog_show_date,
+          show_comments: block.settings.blog_show_comments,
+          show_author: block.settings.blog_show_author,
+          show_excerpt: block.settings.blog_show_excerpt,
+          image_size: block.settings.blog_image_size,
+          style: 'compact'
+        -%}
+      </div>
+    {%- when 'tags' -%}
+      {%- if blog.all_tags.size > 0 -%}
+        <blog-tag-list class="theme-block blog-tag-list" data-tags-per-page="10" {{ block.shopify_attributes }}>
+          <h4>
+            {% render 'utility.translate', key: 'actions.explore_more', fallback: 'Explore more' %}
+          </h4>
+
+          {%- capture tag_group -%}
+            {%- for tag in blog.all_tags -%}
+              <li data-blog-tag{% if forloop.index > 10 %} hidden{% endif %}>
+                {%- assign tag_link = blog.url | append: '/tagged/' | append: tag.handle -%}
+                {%- render 'element.chip', label: tag, href: tag_link -%}
+              </li>
+            {%- endfor -%}
+          {%- endcapture -%}
+
+          {% render 'layout.stack',
+            as: 'ul',
+            classlist: 'tag-group tag-list no-bullets',
+            slot: tag_group,
+            horizontal: true,
+            gap: 'sm'
+          %}
+
+          {%- if blog.all_tags.size > 10 -%}
+            <button type="button" class="blog-tag-list__load-more" data-blog-tag-load-more>
+              {% render 'utility.translate', key: 'actions.load_more', fallback: 'Load more' %}
+            </button>
+          {%- endif -%}
+        </blog-tag-list>
+      {%- endif -%}
+    {%- when 'product' -%}
+      {%- unless block.settings.featured_product.empty? -%}
+        <div class="theme-block" {{ block.shopify_attributes }}>
+          <h4>
+            {% render 'utility.translate', key: 'labels.featured_product', fallback: 'Featured product' %}
+          </h4>
+
+          {%- render 'list.product-card',
+            product: block.settings.featured_product,
+            sizeVariable: '40vw',
+            no_actions: true,
+            disabled_high_variants: false
+          -%}
+        </div>
+      {%- endunless -%}
+    {%- when 'share' -%}
+      {%- if article -%}
+        <div class="theme-block" {{ block.shopify_attributes }}>
+          <h4>
+            {% render 'utility.translate', key: 'actions.share_this', fallback: 'Share this' %}
+          </h4>
+
+          {%- render 'social.sharing',
+            share_title: article.title,
+            share_permalink: article.url,
+            share_image: article.image
+          -%}
+        </div>
+      {%- endif -%}
+  {%- endcase -%}
+{%- endfor -%}
+
+<script type="module">
+  if (!customElements.get('blog-tag-list')) {
+    customElements.define(
+      'blog-tag-list',
+      class BlogTagList extends HTMLElement {
+        connectedCallback() {
+          if (this.dataset.initialized === 'true') return
+          this.dataset.initialized = 'true'
+          this.button = this.querySelector('[data-blog-tag-load-more]')
+          this.tagsPerPage = Number(this.dataset.tagsPerPage) || 10
+          this.button?.addEventListener('click', () => this.showNextTags())
+        }
+
+        showNextTags() {
+          const hiddenTags = [...this.querySelectorAll('[data-blog-tag][hidden]')]
+          hiddenTags.slice(0, this.tagsPerPage).forEach((tag) => tag.removeAttribute('hidden'))
+
+          if (hiddenTags.length <= this.tagsPerPage) {
+            this.button.hidden = true
+          }
+        }
+      }
+    )
+  }
+</script>
+
+{% stylesheet %}
+  .blog-tag-list {
+    display: block;
+  }
+
+  .blog-tag-list [hidden] {
+    display: none !important;
+  }
+
+  .blog-tag-list__load-more {
+    margin-top: var(--size-4);
+    padding: 0 0 3px;
+    color: currentColor;
+    background: transparent;
+    border: 0;
+    border-bottom: 1px solid currentColor;
+    font: inherit;
+    font-weight: var(--element-text-font-weight--heading);
+    cursor: pointer;
+  }
+{% endstylesheet %}

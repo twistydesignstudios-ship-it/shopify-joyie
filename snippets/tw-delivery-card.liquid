@@ -1,0 +1,158 @@
+{%- liquid
+  assign processing_days = block.settings.processing_days | default: 2
+  assign delivery_window = block.settings.delivery_window | default: 4
+  assign country_name = block.settings.country_name | default: 'the US'
+  assign shipping_text = block.settings.shipping_text | default: 'Free shipping with tracking'
+  assign link_text = block.settings.link_text | default: 'Need it by a date?'
+  assign link_url = block.settings.link_url | default: '/pages/contact'
+  assign seconds_per_day = 86400
+  assign now_seconds = 'now' | date: '%s' | plus: 0
+  assign start_offset = processing_days | times: seconds_per_day
+  assign end_days = processing_days | plus: delivery_window
+  assign end_offset = end_days | times: seconds_per_day
+  assign start_seconds = now_seconds | plus: start_offset
+  assign end_seconds = now_seconds | plus: end_offset
+-%}
+
+<aside class="tw-delivery-card" aria-label="Delivery estimate" {{ block.shopify_attributes }}>
+  <span class="tw-delivery-card__icon" aria-hidden="true">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 6.5h11v9H3zM14 10h3.6l2.9 3v2.5H14"></path>
+      <circle cx="7" cy="17" r="1.8"></circle>
+      <circle cx="17.2" cy="17" r="1.8"></circle>
+    </svg>
+  </span>
+
+  <div class="tw-delivery-card__copy">
+    <p class="tw-delivery-card__title">
+      Arrives {{ start_seconds | date: '%a, %b %-d' }}&nbsp;&ndash;&nbsp;{{ end_seconds | date: '%a, %b %-d' }}
+    </p>
+    <p class="tw-delivery-card__detail">
+      Made to order in {{ country_name }} &middot; {{ shipping_text }}
+    </p>
+
+    {%- if link_text != blank -%}
+      <a class="tw-delivery-card__link" href="{{ link_url }}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="3.5" y="5" width="17" height="15.5" rx="2"></rect>
+          <path d="M3.5 10h17M8 3v4M16 3v4"></path>
+        </svg>
+        <span>{{ link_text }}</span>
+      </a>
+    {%- endif -%}
+  </div>
+</aside>
+
+<style>
+  .tw-delivery-card {
+    display: grid;
+    grid-template-columns: 28px minmax(0, 1fr);
+    align-items: start;
+    gap: 12px;
+    margin: 8px 0 14px;
+    padding: 15px 20px;
+    border-radius: 12px;
+    background: #fffaf5;
+    color: #1c1d1d;
+  }
+
+  .product-single__meta > div:has(> .tw-delivery-card) {
+    margin-bottom: 8px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #e8e8e1;
+  }
+
+  .tw-delivery-card__icon {
+    display: flex;
+    color: #c65029;
+  }
+
+  .tw-delivery-card__icon svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .tw-delivery-card__copy p {
+    margin: 0;
+  }
+
+  .tw-delivery-card__copy {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    column-gap: 12px;
+  }
+
+  .tw-delivery-card__title {
+    grid-column: 1;
+    grid-row: 1;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.35;
+  }
+
+  .tw-delivery-card__detail {
+    grid-column: 1;
+    grid-row: 2;
+    margin-top: 3px !important;
+    color: #6b6660;
+    font-size: 14px;
+    line-height: 1.45;
+  }
+
+  .tw-delivery-card__link {
+    grid-column: 2;
+    grid-row: 1;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    color: #c65029;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.35;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  .tw-delivery-card__link svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  @media screen and (max-width: 600px) {
+    .tw-delivery-card {
+      grid-template-columns: 20px minmax(0, 1fr);
+      column-gap: 8px;
+      margin-top: 6px;
+      padding: 14px 16px;
+    }
+
+    .tw-delivery-card__icon svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    .tw-delivery-card__title {
+      font-size: 13px;
+    }
+
+    .tw-delivery-card__detail {
+      font-size: 11px;
+    }
+
+    .tw-delivery-card__link {
+      grid-column: 1;
+      grid-row: 3;
+      align-self: center;
+      justify-self: start;
+      margin-top: 4px;
+      gap: 4px;
+      font-size: 11px;
+      white-space: nowrap;
+    }
+
+    .tw-delivery-card__link svg {
+      width: 14px;
+      height: 14px;
+    }
+  }
+</style>

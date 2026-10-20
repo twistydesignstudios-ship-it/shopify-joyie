@@ -1,0 +1,90 @@
+{% doc %}
+  Three lightweight trust points displayed below the product purchase controls.
+
+  @param {object} block - Shopify product block
+{% enddoc %}
+
+<div class="tw-product-trust-points" {{ block.shopify_attributes }}>
+  <div class="tw-product-trust-point">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M12 3 5.5 5.7v5.5c0 4.2 2.7 7.9 6.5 9.8 3.8-1.9 6.5-5.6 6.5-9.8V5.7L12 3Z"/>
+      <path d="m9.3 11.7 1.8 1.8 3.8-4"/>
+    </svg>
+    <span>{{ block.settings.point_1 | escape }}</span>
+  </div>
+
+  <div class="tw-product-trust-point">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M3 6.5h11v9H3zM14 10h3.5l3 3v2.5H14z"/>
+      <circle cx="7" cy="17.5" r="1.7"/><circle cx="17.5" cy="17.5" r="1.7"/>
+    </svg>
+    <span>{{ block.settings.point_2 | escape }}</span>
+  </div>
+
+  <div class="tw-product-trust-point">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M12 21s6-5.2 6-11a6 6 0 1 0-12 0c0 5.8 6 11 6 11Z"/>
+      <circle cx="12" cy="10" r="2.2"/>
+    </svg>
+    <span>{{ block.settings.point_3 | escape }}</span>
+  </div>
+</div>
+
+<style>
+  .tw-product-trust-points {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+    
+  }
+
+  .tw-product-trust-point {
+    display: flex;
+    min-height: 112px;
+    padding: 16px 10px;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 10px;
+    border-radius: 12px;
+    background: #fffaf5;
+    color: #111;
+    text-align: center;
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.35;
+  }
+
+  .tw-product-trust-point svg {
+    width: 24px;
+    height: 24px;
+    fill: none;
+    stroke: #c65029;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  @media only screen and (min-width: 481px) {
+    .tw-product-trust-point span {
+      width: 100%;
+      max-width: 175px;
+    }
+
+    .tw-product-trust-point:first-child span {
+      max-width: 140px;
+    }
+  }
+
+  @media only screen and (max-width: 480px) {
+    .tw-product-trust-points {
+      gap: 6px;
+    }
+
+    .tw-product-trust-point {
+      min-height: 98px;
+      padding: 12px 6px;
+      font-size: 12px;
+    }
+  }
+</style>

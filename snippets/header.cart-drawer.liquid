@@ -1,0 +1,387 @@
+{% doc %}
+  Copyright © 2025 Archetype Themes LP. All rights reserved.
+
+  Dropdown cart drawer with line items, notes, and checkout controls.
+
+  @param {boolean} [cart_notes_enable] - Enable order notes textarea
+  @param {boolean} [cart_terms_conditions_enable] - Enable terms and conditions checkbox
+  @param {boolean} [header_enable] - Enable cart in header
+  @param {object} [cart_terms_conditions_page] - Page object for terms and conditions link
+  @param {boolean} [cart_additional_buttons] - Show additional payment buttons
+  @param {string} [cart_type] - Cart display type
+
+  @example
+  {% render 'header.cart-drawer', cart_type: 'dropdown', cart_notes_enable: true %}
+{% enddoc %}
+
+{% stylesheet %}
+  .site-header__drawer.site-header__cart {
+    position: fixed;
+    inset: 0 0 0 auto;
+    z-index: 999;
+    display: block;
+    width: min(440px, 100vw);
+    max-width: none;
+    max-height: none;
+    padding: 0;
+    overflow: hidden;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateX(100%);
+    transition: transform 0.38s cubic-bezier(0.22, 1, 0.36, 1);
+    box-shadow: none;
+  }
+
+  .site-header__drawer.site-header__cart.is-active,
+  .site-header__drawer.site-header__cart.is-closing {
+    visibility: visible;
+    box-shadow: -12px 0 40px rgb(0 0 0 / 12%), 0 0 0 100vmax rgb(0 0 0 / 38%);
+  }
+
+  .site-header__drawer.site-header__cart.is-active {
+    pointer-events: auto;
+    transform: translateX(0);
+    animation: cart-drawer-slide-in 0.38s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  @keyframes cart-drawer-slide-in {
+    from {
+      transform: translateX(100%);
+    }
+
+    to {
+      transform: translateX(0);
+    }
+  }
+
+  .site-header__drawer.site-header__cart .site-header__drawer-animate {
+    height: 100%;
+    transform: none;
+    opacity: 1;
+  }
+
+  .cart-drawer {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 0;
+    background: var(--color-secondary);
+  }
+
+  .cart-drawer__top {
+    position: relative;
+    z-index: 2;
+    flex: 0 0 auto;
+    display: flex;
+    box-sizing: border-box;
+    width: 100%;
+    padding: 12px 28px 10px 24px;
+    align-items: center;
+    justify-content: space-between;
+    color: #111;
+    background: #fff4ea;
+    border-bottom: 0;
+  }
+
+  .cart-drawer__title {
+    margin: 0;
+    font-size: var(--element-text-font-size--body-md);
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    line-height: 1.2;
+  }
+
+  .cart-drawer__close {
+    display: flex;
+    width: 54px;
+    min-height: 56px;
+    margin: 0 -5px 0 0;
+    padding: 0;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    color: #111;
+    background: transparent;
+    border: 0;
+    cursor: pointer;
+    font: inherit;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1;
+  }
+
+  .cart-drawer__close-icon {
+    display: grid;
+    width: 30px;
+    height: 30px;
+    place-items: center;
+    color: #fff;
+    background: #C65029;
+    border-radius: 50%;
+    transition: transform 0.2s ease, background-color 0.2s ease;
+  }
+
+  .cart-drawer__close:hover .cart-drawer__close-icon {
+    background: #C65029;
+    transform: rotate(6deg);
+  }
+
+  .cart-drawer__close .element-icon,
+  .cart-drawer__close .icon {
+    width: 15px;
+    height: 15px;
+  }
+
+  .site-header__cart-empty {
+    display: none;
+    padding: 25px 24px;
+    text-align: left;
+
+    .is-empty & {
+      display: block;
+    }
+  }
+
+  .site-header__cart-empty p {
+    margin: 0;
+    font-size: 17px;
+    letter-spacing: 0.02em;
+  }
+
+  .cart-drawer.is-empty {
+    & form {
+      display: none;
+    }
+  }
+
+  /*Scrollable products, fixed footer*/
+  .cart__drawer-form {
+    flex: 1 1 auto;
+    height: auto;
+    min-height: 0;
+    max-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .cart__scrollable {
+    flex: 1 1 auto;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 0 24px;
+
+    & .scrollable-grid {
+      padding-top: 20px;
+      padding-left: 20px;
+      margin-left: -20px;
+      padding-bottom: 2px;
+    }
+  }
+
+  .cart__footer {
+    flex: 0 0 auto;
+    padding: 20px 24px max(20px, env(safe-area-inset-bottom));
+    border-top: 1px solid;
+    border-top-color: color-mix(in srgb, var(--color-primary) var(--shade-12), var(--color-secondary));
+    background: var(--color-secondary);
+    box-shadow: 0 -8px 24px rgb(0 0 0 / 5%);
+  }
+
+  .cart__note {
+    margin-bottom: 20px;
+  }
+
+  .cart-drawer[aria-busy='true'] .cart__scrollable,
+  .cart-drawer[aria-busy='true'] .cart__footer {
+    opacity: 0.65;
+    pointer-events: none;
+  }
+
+  @media only screen and (max-width: 480px) {
+    .site-header__drawer.site-header__cart {
+      width: calc(100vw - 24px);
+    }
+
+    .cart-drawer__top {
+      padding: 10px 20px;
+    }
+
+    .cart-drawer__title {
+      font-size: 24px;
+    }
+
+    .cart__scrollable {
+      padding-inline: 20px;
+    }
+
+    .cart__footer {
+      padding-inline: 20px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .site-header__cart,
+    .cart-drawer__close {
+      transition-duration: 0.01ms;
+    }
+  }
+{% endstylesheet %}
+
+{%- liquid
+  assign cart_notes_enable = cart_notes_enable | default: settings.cart_notes_enable, allow_false: true | default: true, allow_false: true
+  assign cart_terms_conditions_enable = cart_terms_conditions_enable | default: settings.cart_terms_conditions_enable, allow_false: true | default: true, allow_false: true
+  assign header_enable = header_enable | default: section.settings.header_enable, allow_false: true | default: false, allow_false: true
+  assign cart_type = cart_type | default: settings.cart_type | default: blank
+  assign cart_terms_conditions_page = cart_terms_conditions_page | default: settings.cart_terms_conditions_page
+  assign cart_additional_buttons = cart_additional_buttons | default: settings.cart_additional_buttons, allow_false: true | default: true, allow_false: true
+  assign money_format = shop.money_format
+  capture superscript
+    render 'utility.enable-superscript'
+  endcapture
+
+  capture button_submit_text
+    render 'utility.translate', key: 'actions.checkout', fallback: 'Check out'
+  endcapture
+-%}
+
+{%- capture button_submit_attributes -%}
+  data-terms-required="{{ cart_terms_conditions_enable }}"
+{%- endcapture -%}
+
+{%- capture checkbox_label -%}
+  {% if cart_terms_conditions_page != blank %}
+    {% assign actions_terms_i_agree_html = 'actions.terms_i_agree_html'
+      | t: url: cart_terms_conditions_page.url
+    %}
+    {%- capture fallback_actions_terms_i_agree_html -%}
+    I agree with the <a href='{{ cart_terms_conditions_page.url }}' target='_blank'>terms and conditions</a>
+  {%- endcapture -%}
+    {% render 'utility.translate',
+      t: actions_terms_i_agree_html,
+      fallback: fallback_actions_terms_i_agree_html
+    %}
+  {% else %}
+    {% assign actions_terms_i_agree = 'actions.terms_i_agree' | t %}
+    {% render 'utility.translate',
+      t: actions_terms_i_agree,
+      fallback: 'I agree with the terms and conditions'
+    %}
+  {% endif %}
+{%- endcapture -%}
+
+<header-cart-drawer class="cart-drawer{% if cart.item_count == 0 %} is-empty{% endif %}" defer-hydration cart-type="{{ cart_type }}">
+  <div class="cart-drawer__top">
+    <h2 class="cart-drawer__title">
+      Your Cart
+      <span class="visually-hidden" data-drawer-count>({{ cart.item_count }})</span>
+    </h2>
+    <button type="button" class="cart-drawer__close" data-cart-drawer-close aria-label="{% render 'utility.translate', key: 'actions.close', fallback: 'Close' %}">
+      <span class="cart-drawer__close-icon">{% render 'element.icon', name: 'close' %}</span>
+      <span>{% render 'utility.translate', key: 'actions.close', fallback: 'Close' %}</span>
+    </button>
+  </div>
+
+  <form
+    action="{{ routes.cart_url }}"
+    method="post"
+    novalidate
+    data-location="header"
+    class="cart__drawer-form"
+    data-money-format="{{ money_format }}"
+    data-super-script="{{ superscript | strip }}"
+  >
+    <div class="cart__scrollable">
+      <div data-products>
+        <div class="cart__items" data-count="{{ cart.item_count }}">
+          {% for item in cart.items %}
+            {%- render 'cart.line-item',
+              item: item,
+              section: section,
+              sizes: '100px',
+              routes: routes,
+              shop: shop,
+              truncate_title: 80,
+              superscript_decimals: settings.superscript_decimals
+            -%}
+          {% endfor %}
+        </div>
+      </div>
+      {% comment %} {%- render 'cart.recommendations', context: 'drawer' -%} {% endcomment %}
+    </div>
+
+    <div class="cart__footer">
+      {% if cart_notes_enable %}
+        <div class="cart__item-row">
+          {%- render 'cart.order-note' -%}
+        </div>
+      {% endif %}
+
+      <div class="cart__item-sub cart__item-row cart__item--subtotal">
+        <div>
+          {% render 'utility.translate', key: 'labels.subtotal', fallback: 'Subtotal' %}
+        </div>
+        {%- render 'element.price', price: cart.total_price, attributes: 'data-subtotal' -%}
+      </div>
+
+      <div data-discounts></div>
+
+      {% if cart_terms_conditions_enable %}
+        <div class="cart__item-row cart__terms">
+          {%- render 'element.checkbox', classlist: 'cart__terms-checkbox', value: '', label: checkbox_label, name: 'CartTerms' -%}
+        </div>
+      {% endif %}
+
+      <div class="cart__item-row cart__checkout-wrapper payment-buttons">
+        {%- render 'element.button',
+          type: 'submit',
+          name: 'checkout',
+          text: button_submit_text,
+          classlist: 'cart__checkout',
+          attributes: button_submit_attributes
+        -%}
+
+        {% if cart_type == 'dropdown' and additional_checkout_buttons and cart_additional_buttons %}
+          <div class="additional-checkout-buttons">{{ content_for_additional_checkout_buttons }}</div>
+        {% endif %}
+      </div>
+
+      <div class="cart__item-row--footer text-center">
+        <small>
+          {%- if cart.taxes_included -%}
+            {% assign info_shipping_at_checkout_taxes_included = 'info.shipping_at_checkout_taxes_included' | t %}
+            {% render 'utility.translate',
+              t: info_shipping_at_checkout_taxes_included,
+              fallback: 'Taxes included. Shipping and discount codes calculated at checkout.'
+            %}
+          {%- else -%}
+            {% assign info_shipping_at_checkout = 'info.shipping_at_checkout' | t %}
+            {% render 'utility.translate',
+              t: info_shipping_at_checkout,
+              fallback: 'Shipping, taxes, and discount codes calculated at checkout.'
+            %}
+          {%- endif -%}
+        </small>
+      </div>
+    </div>
+    <script type="application/json" data-locales>
+      {
+        "cartTermsConfirmation":
+          {% render 'utility.translate', key: 'info.you_must_agree', fallback: 'You must agree with the terms and conditions of sales to check out', as_json: true -%}
+        ,
+        "cartSavings":
+          {%- assign info_save_amount = 'info.save_amount' | t: saved_amount: "[savings]" -%}
+          {%- render 'utility.translate', t: info_save_amount, fallback: 'Save [savings]', as_json: true, as_json: true -%}
+      }
+    </script>
+  </form>
+
+  <div class="site-header__cart-empty">
+    <p>{% render 'utility.translate', key: 'info.cart_empty', fallback: 'Your cart is currently empty.' %}</p>
+  </div>
+</header-cart-drawer>
+
+<script type="module">
+  import 'header.cart-drawer'
+</script>

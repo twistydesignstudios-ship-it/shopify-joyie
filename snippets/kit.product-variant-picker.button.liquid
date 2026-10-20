@@ -1,0 +1,184 @@
+{% doc %}
+  Renders one product option's values as radios. Swatch options (value.swatch)
+  render as swatches; every other option renders button-styled radios.
+
+  @param {object} option - product_option object (from product.options_with_values)
+  @param {object} product - Product object used to resolve option prices
+  @param {boolean} [enable_swatches] - Render values with a swatch as swatches. Default: false
+  @param {boolean} [enable_select_unavailable] - Keep sold-out values selectable (marked unavailable) instead of disabling them. Default: false
+  @param {string} [legacy_swatch_source] - Where to find swatches for values that have no `value.swatch`: 'files' (Shopify Files) or 'assets' (theme assets), keyed on `{value-handle}.png`. Every value in the option becomes a swatch, so only pass this for color options. Requires `enable_swatches`.
+{% enddoc %}
+
+{% liquid
+  assign enable_swatches = enable_swatches | default: false, allow_false: true
+  assign enable_select_unavailable = enable_select_unavailable | default: false, allow_false: true
+  
+  assign option_name_escaped = option.name | escape
+%}
+
+{% capture stack_content %}
+  {% for value in option.values %}
+    {%- liquid
+      assign input_value = value | escape
+      assign value_name_escaped = value.name | escape
+      assign value_name_display = value_name_escaped
+      assign value_name_match = value.name | downcase
+      if value_name_match == 'unframed poster'
+        assign value_name_display = 'Unframed'
+      elsif value_name_match == 'black framed poster'
+        assign value_name_display = 'Black'
+      elsif value_name_match == 'white framed poster'
+        assign value_name_display = 'White'
+      elsif value_name_match == 'natural wood framed'
+        assign value_name_display = 'Natural Wood'
+      elsif value_name_match == 'dark wood framed'
+        assign value_name_display = 'Dark Wood'
+      endif
+
+      assign radio_classes = ''
+      assign option_name_for_visibility = option.name | downcase
+      if option_name_for_visibility contains 'style' and value_name_match contains 'canvas'
+        assign radio_classes = 'kit-radio--frontend-hidden'
+      endif
+
+      assign radio_attr = 'data-option-value-id="' | append: value.id | append: '"'
+      if value.product_url
+        assign radio_attr = radio_attr | append: ' data-product-url="' | append: value.product_url | append: '"'
+      endif
+
+      assign button_swatch_disabled = false
+      if value.available == false
+        assign button_swatch_disabled = true
+      endif
+
+      assign input_disabled = false
+      if button_swatch_disabled and enable_select_unavailable == false
+        assign input_disabled = true
+      endif
+
+      assign is_swatch = false
+      assign swatch_color = nil
+      assign swatch_image = nil
+      if enable_swatches and value.swatch
+        assign is_swatch = true
+        assign swatch_color = value.swatch.color
+        assign swatch_image = value.swatch.image | image_url: width: 50
+      elsif enable_swatches and legacy_swatch_source != blank
+        # Legacy swatches predate value.swatch: an image named after the value
+        # handle, backed by the last word of the value name as a CSS color.
+        assign is_swatch = true
+        assign swatch_color = value.name | split: ' ' | last | handle
+        assign legacy_swatch_file = value.name | handle | append: '.png'
+        if legacy_swatch_source == 'files' and images[legacy_swatch_file] != blank
+          assign swatch_image = images[legacy_swatch_file] | image_url: width: 50
+        elsif legacy_swatch_source == 'assets'
+          assign swatch_image = legacy_swatch_file | asset_url
+        endif
+      endif
+
+      assign option_name_match = option.name | downcase
+      assign option_index = option.position | minus: 1
+      assign option_value_price = blank
+      if option_name_match contains 'size'
+        for variant in product.variants
+          assign variant_matches_selection = true
+
+          for comparison_option in product.options_with_values
+            assign comparison_index = comparison_option.position | minus: 1
+
+            if comparison_option.position == option.position
+              unless variant.options[comparison_index] == value.name
+                assign variant_matches_selection = false
+                break
+              endunless
+            else
+              unless variant.options[comparison_index] == comparison_option.selected_value
+                assign variant_matches_selection = false
+                break
+              endunless
+            endif
+          endfor
+
+          if variant_matches_selection and variant.available
+            assign option_value_price = variant.price
+            break
+          endif
+
+          if variant_matches_selection and option_value_price == blank
+            assign option_value_price = variant.price
+          endif
+        endfor
+      endif
+    -%}
+
+    {% capture radio_content %}
+      {% if is_swatch %}
+        {%- render 'kit.swatch',
+          tag: 'span',
+          color: swatch_color,
+          image: swatch_image,
+          disabled: button_swatch_disabled
+        -%}
+        {%- comment -%} A swatch carries no text, so the radio has no accessible name without this. {%- endcomment -%}
+        {%- render 'kit.visually-hidden', text: value_name_escaped -%}
+        <span class="kit-variant-value-name">{{ value_name_display }}</span>
+      {% elsif option_name_match contains 'size' %}
+        {%- liquid
+          assign size_primary = value.name
+          assign size_secondary = ''
+          if value.name contains '('
+            assign size_parts = value.name | split: '('
+            assign size_secondary = size_parts | first | strip
+            assign size_primary = size_parts | last | remove: ')' | strip
+          endif
+          assign normalized_size = size_primary | replace: '×', 'x' | remove: '"' | strip
+          assign dimension_parts = normalized_size | split: 'x'
+          assign shape_width = dimension_parts | first | plus: 0 | times: 0.95
+          assign shape_height = dimension_parts | last | plus: 0 | times: 1.25
+          if normalized_size == '8x12' or normalized_size == '12x16'
+            assign shape_width = dimension_parts | first | plus: 0 | times: 1.1
+            assign shape_height = dimension_parts | last | plus: 0 | times: 1.1
+          endif
+        -%}
+        <span class="kit-variant-size-card">
+          <span
+            class="kit-variant-size-card__shape"
+            style="--size-shape-width: {{ shape_width }}px; --size-shape-height: {{ shape_height }}px;"
+            aria-hidden="true"
+          ></span>
+          <strong class="kit-variant-size-card__primary">{{ size_primary | escape }}</strong>
+          {%- if size_secondary != blank -%}
+            <span class="kit-variant-size-card__secondary">{{ size_secondary | escape }}</span>
+          {%- endif -%}
+          {%- if option_value_price != blank -%}
+            <strong class="kit-variant-size-card__price">{{ option_value_price | money_without_trailing_zeros }}</strong>
+          {%- endif -%}
+        </span>
+      {% else %}
+        {% render 'kit.button',
+          tag: 'span',
+          text: value_name_display,
+          variant: 'secondary',
+          disabled: button_swatch_disabled
+        %}
+      {% endif %}
+    {% endcapture %}
+
+    {% render 'kit.radio',
+      name: option_name_escaped,
+      content: radio_content,
+      value: input_value,
+      checked: value.selected,
+      disabled: input_disabled,
+      classes: radio_classes,
+      attr: radio_attr
+    %}
+  {% endfor %}
+{% endcapture %}
+
+{% render 'kit.stack',
+  content: stack_content,
+  direction: 'horizontal',
+  gap: 'xs',
+  wrap: true
+%}

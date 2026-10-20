@@ -1,0 +1,532 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "blocks": {
+        "title_hDhFRY": {
+          "type": "title",
+          "settings": {
+            "vendor_enable": false,
+            "sku_enable": false
+          }
+        },
+        "review_summary": {
+          "type": "review_summary",
+          "settings": {
+            "rating": "4.9"
+          }
+        },
+        "price": {
+          "type": "price",
+          "settings": {}
+        },
+        "promotion_banner": {
+          "type": "promotion_banner",
+          "settings": {
+            "heading": "Buy 2 posters, Get 1 free!",
+            "details": "Auto Applied at checkout",
+            "end_date": "",
+            "link_label": "Add another poster",
+            "link": "shopify://collections/united-states",
+            "other_link": "shopify://collections/personalized-canvas"
+          }
+        },
+        "variant_picker": {
+          "type": "variant_picker",
+          "settings": {
+            "variant_labels": true,
+            "picker_type": "button",
+            "color_swatches": true,
+            "size_chart_option": "",
+            "size_chart": ""
+          }
+        },
+        "inventory_status": {
+          "type": "inventory_status",
+          "disabled": true,
+          "settings": {
+            "inventory_threshold": 10,
+            "inventory_transfers_enable": true
+          }
+        },
+        "quantity_selector_nn3DBF": {
+          "type": "quantity_selector",
+          "settings": {}
+        },
+        "buy_buttons": {
+          "type": "buy_buttons",
+          "settings": {
+            "show_dynamic_checkout": true,
+            "surface_pickup_enable": true,
+            "show_gift_card_recipient": false
+          }
+        },
+        "custom_jEwB6p": {
+          "type": "custom",
+          "settings": {
+            "code": "{% render 'tw-delivery-card' %}"
+          }
+        },
+        "trust_points": {
+          "type": "trust_points",
+          "settings": {
+            "point_1": "100% Love-It Guarantee",
+            "point_2": "Free shipping with tracking",
+            "point_3": "Printed & framed in the USA"
+          }
+        },
+        "description_U3LNgz": {
+          "type": "description",
+          "settings": {
+            "is_tab": true
+          }
+        },
+        "tab_hX9waX": {
+          "type": "tab",
+          "settings": {
+            "title": "Details & materials",
+            "content": "<ul><li>Pine wood frame, 20–25 mm deep</li><li>Shatterproof plexiglass front</li><li>200 gsm FSC-certified paper</li><li>Fade-resistant inks</li><li>Arrives ready to hang</li><li>Made to order in the US</li></ul>",
+            "page": ""
+          }
+        },
+        "tab_iiP3Mb": {
+          "type": "tab",
+          "settings": {
+            "title": "Shipping information",
+            "content": "",
+            "page": "shipping-info-map-wall-art"
+          }
+        }
+      },
+      "block_order": [
+        "title_hDhFRY",
+        "review_summary",
+        "price",
+        "promotion_banner",
+        "variant_picker",
+        "inventory_status",
+        "quantity_selector_nn3DBF",
+        "buy_buttons",
+        "custom_jEwB6p",
+        "trust_points",
+        "description_U3LNgz",
+        "tab_hX9waX",
+        "tab_iiP3Mb"
+      ],
+      "settings": {
+        "image_position": "left",
+        "image_container_size": "medium",
+        "product_image_size": "natural",
+        "product_zoom_enable": false,
+        "thumbnail_position": "below",
+        "thumbnail_height": "flexible",
+        "thumbnail_arrows": true,
+        "mobile_layout": "full",
+        "enable_video_looping": true,
+        "product_video_style": "muted"
+      }
+    },
+    "tw_size_guide_JJDzqF": {
+      "type": "tw-size-guide",
+      "blocks": {
+        "size_EnfUxt": {
+          "type": "size",
+          "settings": {
+            "imperial": "8×12\"",
+            "metric": "21×30 cm",
+            "placement": "Desk, shelf, nightstand",
+            "highlight": false,
+            "frame_width": 52,
+            "frame_height": 78
+          }
+        },
+        "size_74mKHq": {
+          "type": "size",
+          "settings": {
+            "imperial": "12×16\"",
+            "metric": "30×40 cm",
+            "placement": "Gallery wall, hallway",
+            "highlight": true,
+            "frame_width": 78,
+            "frame_height": 102
+          }
+        },
+        "size_77MtTP": {
+          "type": "size",
+          "settings": {
+            "imperial": "18×24\"",
+            "metric": "45×60 cm",
+            "placement": "Above a dresser",
+            "highlight": false,
+            "frame_width": 116,
+            "frame_height": 154
+          }
+        },
+        "size_7xwy34": {
+          "type": "size",
+          "settings": {
+            "imperial": "20×28\"",
+            "metric": "50×70 cm",
+            "placement": "Above a sofa or bed",
+            "highlight": false,
+            "frame_width": 128,
+            "frame_height": 180
+          }
+        },
+        "size_FQwqfQ": {
+          "type": "size",
+          "settings": {
+            "imperial": "24×32\"",
+            "metric": "60×80 cm",
+            "placement": "Statement wall",
+            "highlight": false,
+            "frame_width": 154,
+            "frame_height": 206
+          }
+        }
+      },
+      "block_order": [
+        "size_EnfUxt",
+        "size_74mKHq",
+        "size_77MtTP",
+        "size_7xwy34",
+        "size_FQwqfQ"
+      ],
+      "settings": {
+        "eyebrow": "SIZE GUIDE",
+        "heading": "See the size on wall",
+        "text": "<p>Every frame drawn to scale against an 84-inch sofa, so there are no surprises when it arrives.</p>",
+        "scale_note": "Sofa shown 84\" wide for scale",
+        "cta_label": "Choose your size & buy now",
+        "background": "#fffaf5",
+        "section_gap": 68,
+        "padding_top": 64,
+        "padding_bottom": 64,
+        "section_gap_mobile": 20,
+        "padding_top_mobile": 40,
+        "padding_bottom_mobile": 40
+      }
+    },
+    "tw_how_it_is_made_6MBTkr": {
+      "type": "TW-how-it-is-made",
+      "blocks": {
+        "step_MpMrfJ": {
+          "type": "step",
+          "settings": {
+            "step": "01",
+            "icon": "personalize",
+            "heading": "You personalize",
+            "text": "<p>Add your photos and text. The preview updates as you go.</p>"
+          }
+        },
+        "step_dr9t3n": {
+          "type": "step",
+          "settings": {
+            "step": "02",
+            "icon": "print",
+            "heading": "We print and frame in the US",
+            "text": "<p>200 gsm FSC-certified paper, fade-resistant inks, a pine frame and shatterproof plexiglass.</p>"
+          }
+        },
+        "step_HAek9V": {
+          "type": "step",
+          "settings": {
+            "step": "03",
+            "icon": "gift",
+            "heading": "It arrives ready to hang",
+            "text": "<p>Made to order and shipped free with tracking, ready to give straight out of the box.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "step_MpMrfJ",
+        "step_dr9t3n",
+        "step_HAek9V"
+      ],
+      "name": "TW how it is made",
+      "settings": {
+        "eyebrow": "HOW IT'S MADE",
+        "heading": "From your camera roll to wall",
+        "background": "#ffffff",
+        "section_gap": 0,
+        "padding_top": 64,
+        "padding_bottom": 64,
+        "section_gap_mobile": 0,
+        "padding_top_mobile": 40,
+        "padding_bottom_mobile": 40
+      }
+    },
+    "tw_reviews_wCdACW": {
+      "type": "TW-reviews",
+      "blocks": {
+        "photo_FmH3h6": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/IMG_20240529_151914_2-2_Large_190bb2c0-07b3-4531-a4b4-7c0e78472633.jpg"
+          }
+        },
+        "photo_Le4KtT": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/IMG_5607_Large_62603054-188b-49ed-bdc5-508c786c7da5.jpg"
+          }
+        },
+        "photo_qYjbUR": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/image00012-2_Large_dc2ce888-7ff8-42ed-a2e2-5dab41609d6b.jpg"
+          }
+        },
+        "photo_p8g3YC": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/image00001_Large_6570604a-0c92-433c-97b5-76396e05658f.jpg"
+          }
+        },
+        "photo_W96Q7A": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/151.1_Dignity_Health_Sports_Park9.jpg"
+          }
+        },
+        "photo_rxLtDT": {
+          "type": "photo",
+          "settings": {
+            "image": "shopify://shop_images/Joyie.Co_photo_4-2_Large_3d34f73a-7b18-41e5-9ae3-407aa3a937cf.jpg"
+          }
+        },
+        "review_p7Ta9B": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "date": "24/08/26",
+            "heading": "Definitely Recommend!",
+            "text": "<p>Such a lovely product! It feels premium and I’ve already received so many compliments.</p>",
+            "customer": "Olivia Bennett",
+            "verified": true,
+            "product_detail": "20×28\" 50×70 cm"
+          }
+        },
+        "review_yXN4Yk": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "date": "09/09/26",
+            "heading": "Beautiful & Well Made",
+            "text": "<p>Ordered this city poster, and I’m in love! The detail and colors are absolutely stunning!</p>",
+            "customer": "Diana P.",
+            "verified": true,
+            "product_detail": "8×12\" 21×30 cm"
+          }
+        },
+        "review_hcbcYb": {
+          "type": "review",
+          "settings": {
+            "rating": 5,
+            "date": "12/09/26",
+            "heading": "So Happy With My Purchase",
+            "text": "<p>Exactly what I was looking for. Beautiful design, great quality, and arrived perfectly.</p>",
+            "customer": "Sophie Williams",
+            "verified": true,
+            "product_detail": "12×16\" 30×40 cm"
+          }
+        }
+      },
+      "block_order": [
+        "photo_FmH3h6",
+        "photo_Le4KtT",
+        "photo_qYjbUR",
+        "photo_p8g3YC",
+        "photo_W96Q7A",
+        "photo_rxLtDT",
+        "review_p7Ta9B",
+        "review_yXN4Yk",
+        "review_hcbcYb"
+      ],
+      "name": "TW reviews",
+      "settings": {
+        "eyebrow": "REVIEWS",
+        "heading": "who got this one",
+        "rating": "4.9",
+        "review_count": "Based on customer reviews",
+        "button_text": "",
+        "button_link": "",
+        "background": "#fffaf5",
+        "section_gap": 0,
+        "padding_top": 64,
+        "padding_bottom": 64,
+        "section_gap_mobile": 0,
+        "padding_top_mobile": 40,
+        "padding_bottom_mobile": 40
+      }
+    },
+    "tw_before_order_faq_pjXNMA": {
+      "type": "TW-before-order-faq",
+      "blocks": {
+        "question_h3xYpD": {
+          "type": "question",
+          "settings": {
+            "question": "Will I see my design before it prints?",
+            "answer": "<p>Yes. The preview at the top of this page updates as you add photos and text. Check names and spelling before you add to cart.</p>",
+            "open": true
+          }
+        },
+        "question_9dKH8p": {
+          "type": "question",
+          "settings": {
+            "question": "Which photos work best?",
+            "answer": "<p>Clear, well-lit photos with the face near the middle. Phone photos are fine. We flag any photo that is likely to print blurry so you can swap it.</p>",
+            "open": false
+          }
+        },
+        "question_Y8XzbD": {
+          "type": "question",
+          "settings": {
+            "question": "Does the frame come ready to hang?",
+            "answer": "<p>Yes. Framed posters arrive ready to hang straight out of the box.</p>",
+            "open": false
+          }
+        },
+        "question_8TRjyR": {
+          "type": "question",
+          "settings": {
+            "question": "How long does delivery take?",
+            "answer": "<p>Your delivery estimate is shown near the product options. Tracking is provided when your order ships.</p>",
+            "open": false
+          }
+        },
+        "question_4TyrUc": {
+          "type": "question",
+          "settings": {
+            "question": "Can I return a personalized poster?",
+            "answer": "<p>Please review our personalized-product return policy or contact support if there is a problem with your order.</p>",
+            "open": false
+          }
+        },
+        "question_L6ehyq": {
+          "type": "question",
+          "settings": {
+            "question": "Can I change my photos after ordering?",
+            "answer": "<p>Contact us as soon as possible. Changes may be possible before your order enters production.</p>",
+            "open": false
+          }
+        }
+      },
+      "block_order": [
+        "question_h3xYpD",
+        "question_9dKH8p",
+        "question_Y8XzbD",
+        "question_8TRjyR",
+        "question_4TyrUc",
+        "question_L6ehyq"
+      ],
+      "name": "TW before order FAQ",
+      "settings": {
+        "eyebrow": "GOOD TO KNOW",
+        "heading": "Before you order",
+        "support_text": "Still unsure?",
+        "support_link_text": "support@joyie.co",
+        "support_link": "",
+        "background": "#ffffff",
+        "section_gap": 0,
+        "padding_top": 64,
+        "padding_bottom": 64,
+        "section_gap_mobile": 0,
+        "padding_top_mobile": 40,
+        "padding_bottom_mobile": 40
+      }
+    },
+    "sub": {
+      "type": "product-full-width",
+      "blocks": {
+        "description": {
+          "type": "description",
+          "settings": {
+            "is_tab": true
+          }
+        },
+        "tab": {
+          "type": "tab",
+          "settings": {
+            "title": "Shipping information",
+            "content": "<p>Use collapsible tabs for more detailed information that will help customers make a purchasing decision.</p><p>Ex: Shipping and return policies, size guides, and other common questions.</p>",
+            "page": ""
+          }
+        },
+        "contact": {
+          "type": "contact",
+          "settings": {
+            "title": "Ask a question",
+            "phone": false
+          }
+        }
+      },
+      "block_order": [
+        "description",
+        "tab",
+        "contact"
+      ],
+      "disabled": true,
+      "settings": {
+        "max_width": true
+      }
+    },
+    "recommendations": {
+      "type": "product-recommendations",
+      "settings": {
+        "product_recommendations_heading": "Pair it or compare",
+        "related_count": 4,
+        "products_per_row": 4
+      }
+    },
+    "more-products-vendor": {
+      "type": "more-products-vendor",
+      "disabled": true,
+      "settings": {
+        "products_per_row": 4,
+        "max_products": 4
+      }
+    },
+    "more-products-collection": {
+      "type": "more-products-collection",
+      "disabled": true,
+      "settings": {
+        "products_per_row": 5,
+        "max_products": 5
+      }
+    },
+    "recently-viewed": {
+      "type": "recently-viewed",
+      "settings": {}
+    },
+    "collection-return": {
+      "type": "collection-return",
+      "disabled": true,
+      "settings": {
+        "color_scheme": "none"
+      }
+    }
+  },
+  "order": [
+    "main",
+    "tw_size_guide_JJDzqF",
+    "tw_how_it_is_made_6MBTkr",
+    "tw_reviews_wCdACW",
+    "tw_before_order_faq_pjXNMA",
+    "sub",
+    "recommendations",
+    "more-products-vendor",
+    "more-products-collection",
+    "recently-viewed",
+    "collection-return"
+  ]
+}

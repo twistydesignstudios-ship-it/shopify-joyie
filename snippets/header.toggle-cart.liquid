@@ -1,0 +1,60 @@
+{% doc %}
+  Copyright © 2025 Archetype Themes LP. All rights reserved.
+
+  Cart toggle button that opens drawer or navigates to cart page based on cart type.
+
+  @param {string} [cart_type] - Cart display type ('page' or 'dropdown'), defaults to theme setting
+  @param {string} [cart_link] - Custom cart link HTML
+
+  @example
+  {% render 'header.toggle-cart', cart_type: 'dropdown' %}
+{% enddoc %}
+
+{%- liquid
+  assign cart_type = cart_type | default: settings.cart_type | default: 'page'
+
+  unless settings.cart_drawer_enable
+    assign cart_type = 'page'
+  endunless
+-%}
+
+<toggle-cart cart-type="{{ cart_type }}">
+  {{- cart_link -}}
+</toggle-cart>
+{%- if cart_type == 'dropdown' -%}
+  <script>
+    (() => {
+      const toggle = document.currentScript.previousElementSibling
+      if (!toggle || toggle.dataset.preHydrationGuard === 'true') return
+
+      toggle.dataset.preHydrationGuard = 'true'
+      toggle.addEventListener('click', (event) => {
+        const cartLink = event.target.closest('[data-cart-trigger]')
+        if (!cartLink) return
+        if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return
+
+        const toggleReady = customElements.get('toggle-cart')
+        const drawerReady = customElements.get('header-drawer')
+        if (toggleReady && drawerReady) return
+
+        event.preventDefault()
+        event.stopImmediatePropagation()
+
+        if (toggle.dataset.cartOpenPending === 'true') return
+        toggle.dataset.cartOpenPending = 'true'
+        cartLink.setAttribute('aria-expanded', 'true')
+
+        Promise.all([
+          customElements.whenDefined('toggle-cart'),
+          customElements.whenDefined('header-drawer')
+        ]).then(() => {
+          delete toggle.dataset.cartOpenPending
+          document.dispatchEvent(new CustomEvent('cart:open'))
+        })
+      })
+    })()
+  </script>
+{%- endif -%}
+<script type="module">
+  import 'header.toggle-cart'
+</script>

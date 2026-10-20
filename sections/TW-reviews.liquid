@@ -1,0 +1,114 @@
+<section id="reviews" class="tw-reviews">
+  <div class="page-width">
+    <header class="tw-reviews__header">
+      <div>
+        {%- if section.settings.eyebrow != blank -%}<p class="tw-reviews__eyebrow">{{ section.settings.eyebrow }}</p>{%- endif -%}
+        <h2 class="tw-reviews__title">{{ section.settings.heading }}</h2>
+      </div>
+      <div class="tw-reviews__summary">
+        <strong>{{ section.settings.rating }}</strong>
+        <div>
+          <div class="tw-reviews__stars" aria-label="{{ section.settings.rating }} out of 5 stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+          <span>{{ section.settings.review_count }}</span>
+        </div>
+        {%- if section.settings.button_text != blank -%}
+          <a class="tw-reviews__button" href="{{ section.settings.button_link | default: '#reviews' }}">{{ section.settings.button_text }}</a>
+        {%- endif -%}
+      </div>
+    </header>
+
+    {%- assign photo_blocks = section.blocks | where: 'type', 'photo' -%}
+    {%- if photo_blocks.size > 0 -%}
+      <div class="tw-reviews__photos">
+        {%- for block in photo_blocks -%}
+          <div class="tw-reviews__photo" {{ block.shopify_attributes }}>
+            {%- if block.settings.image != blank -%}
+              {{ block.settings.image | image_url: width: 500 | image_tag: loading: 'lazy', widths: '180,300,500', alt: block.settings.image.alt }}
+            {%- else -%}
+              <span>Customer photo</span>
+            {%- endif -%}
+          </div>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+
+    <div class="tw-reviews__content">
+      {%- for block in section.blocks -%}
+        {%- case block.type -%}
+          {%- when '@app' -%}{% render block %}
+          {%- when 'review' -%}
+            <article class="tw-reviews__card" {{ block.shopify_attributes }}>
+              <div class="tw-reviews__card-top"><span class="tw-reviews__stars">{% for i in (1..5) %}{% if i <= block.settings.rating %}&#9733;{% else %}&#9734;{% endif %}{% endfor %}</span><span>{{ block.settings.date }}</span></div>
+              <h3>{{ block.settings.heading }}</h3>
+              <div class="rte">{{ block.settings.text }}</div>
+              <p><strong>{{ block.settings.customer }}</strong>{% if block.settings.verified %}<span class="tw-reviews__verified">&#10003; Verified buyer</span>{% endif %}</p>
+              {%- if block.settings.product_detail != blank -%}<small>{{ block.settings.product_detail }}</small>{%- endif -%}
+            </article>
+        {%- endcase -%}
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% style %}
+  #shopify-section-{{ section.id }} .tw-reviews { margin-top: {{ section.settings.section_gap }}px; padding: {{ section.settings.padding_top }}px 0 {{ section.settings.padding_bottom }}px; background: {{ section.settings.background }}; }
+  #shopify-section-{{ section.id }} .tw-reviews__header { display:flex; align-items:flex-end; justify-content:space-between; gap:40px; margin-bottom:36px; }
+  #shopify-section-{{ section.id }} .tw-reviews__eyebrow { margin:0 0 9px; color:#c65029; font-size:12px; font-weight:700; letter-spacing:.14em; }
+  #shopify-section-{{ section.id }} .tw-reviews__title { margin:0; font-size:clamp(27px,2.2vw,34px); line-height:1.18; letter-spacing:-.015em; }
+  #shopify-section-{{ section.id }} .tw-reviews__summary { display:flex; align-items:center; gap:16px; }
+  #shopify-section-{{ section.id }} .tw-reviews__summary>strong { font-size:48px; line-height:1; font-weight:600; }
+  #shopify-section-{{ section.id }} .tw-reviews__summary>div { display:grid; gap:3px; color:#6b6660; font-size:13px; }
+  #shopify-section-{{ section.id }} .tw-reviews__stars { color:#c65029; letter-spacing:2px; white-space:nowrap; }
+  #shopify-section-{{ section.id }} .tw-reviews__button { display:inline-flex; min-height:46px; padding:0 21px; align-items:center; border:1px solid #1c1d1d; border-radius:50px; color:#1c1d1d; font-size:14px; font-weight:700; text-decoration:none; }
+  #shopify-section-{{ section.id }} .tw-reviews__photos { display:grid; grid-template-columns:repeat(6,minmax(0,1fr)); gap:12px; margin-bottom:28px; }
+  #shopify-section-{{ section.id }} .tw-reviews__photo { display:flex; height:200px; align-items:center; justify-content:center; overflow:hidden; border-radius:8px; background:repeating-linear-gradient(135deg,#f3ede6 0 10px,#ede5dc 10px 20px); color:#8a847d; font-size:12px; }
+  #shopify-section-{{ section.id }} .tw-reviews__photo img { width:100%; height:100%; object-fit:cover; }
+  #shopify-section-{{ section.id }} .tw-reviews__content { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:20px; }
+  #shopify-section-{{ section.id }} .tw-reviews__content>div:only-child { grid-column:1/-1; }
+  #shopify-section-{{ section.id }} .tw-reviews__card { display:grid; gap:11px; padding:24px; border:1px solid #e8e8e1; border-radius:12px; background:#fff; }
+  #shopify-section-{{ section.id }} .tw-reviews__card-top { display:flex; justify-content:space-between; gap:12px; color:#6b6660; font-size:12px; }
+  #shopify-section-{{ section.id }} .tw-reviews__card h3,#shopify-section-{{ section.id }} .tw-reviews__card p { margin:0; }
+  #shopify-section-{{ section.id }} .tw-reviews__card .rte { color:#6b6660; font-size:14px; line-height:1.6; }
+  #shopify-section-{{ section.id }} .tw-reviews__verified { margin-left:8px; color:#007f61; font-size:12px; }
+  #shopify-section-{{ section.id }} .tw-reviews__card small { color:#6b6660; }
+  @media(max-width:800px){#shopify-section-{{ section.id }} .tw-reviews__header{align-items:flex-start;flex-direction:column;}#shopify-section-{{ section.id }} .tw-reviews__photos{grid-template-columns:repeat(3,minmax(0,1fr));}#shopify-section-{{ section.id }} .tw-reviews__content{grid-template-columns:1fr;}}
+  @media(max-width:600px){#shopify-section-{{ section.id }} .tw-reviews{margin-top:{{ section.settings.section_gap_mobile }}px;padding:{{ section.settings.padding_top_mobile }}px 0 {{ section.settings.padding_bottom_mobile }}px;}#shopify-section-{{ section.id }} .tw-reviews__summary{align-items:flex-start;flex-wrap:wrap;}#shopify-section-{{ section.id }} .tw-reviews__photos{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:10px;scrollbar-width:thin;scrollbar-color:#b8b8b8 transparent;}#shopify-section-{{ section.id }} .tw-reviews__photos::-webkit-scrollbar{height:3px;}#shopify-section-{{ section.id }} .tw-reviews__photos::-webkit-scrollbar-track{background:transparent;}#shopify-section-{{ section.id }} .tw-reviews__photos::-webkit-scrollbar-thumb{background:#b8b8b8;}#shopify-section-{{ section.id }} .tw-reviews__photo{min-width:42%;scroll-snap-align:start;}}
+{% endstyle %}
+
+{% schema %}
+{
+  "name":"TW reviews",
+  "settings":[
+    {"type":"text","id":"eyebrow","label":"Eyebrow","default":"REVIEWS"},
+    {"type":"text","id":"heading","label":"Heading","default":"Moms who got this one"},
+    {"type":"text","id":"rating","label":"Average rating","default":"4.9"},
+    {"type":"text","id":"review_count","label":"Review count text","default":"Based on customer reviews"},
+    {"type":"text","id":"button_text","label":"Button text","default":"Write a review"},
+    {"type":"url","id":"button_link","label":"Button link"},
+    {"type":"color","id":"background","label":"Background","default":"#fffaf5"},
+    {"type":"header","content":"Desktop spacing"},
+    {"type":"range","id":"section_gap","label":"Space above section","min":0,"max":120,"step":4,"unit":"px","default":0},
+    {"type":"range","id":"padding_top","label":"Top padding","min":0,"max":160,"step":4,"unit":"px","default":64},
+    {"type":"range","id":"padding_bottom","label":"Bottom padding","min":0,"max":160,"step":4,"unit":"px","default":64},
+    {"type":"header","content":"Mobile spacing"},
+    {"type":"range","id":"section_gap_mobile","label":"Space above section","min":0,"max":80,"step":4,"unit":"px","default":0},
+    {"type":"range","id":"padding_top_mobile","label":"Top padding","min":0,"max":100,"step":4,"unit":"px","default":40},
+    {"type":"range","id":"padding_bottom_mobile","label":"Bottom padding","min":0,"max":100,"step":4,"unit":"px","default":40}
+  ],
+  "blocks":[
+    {"type":"@app"},
+    {"type":"photo","name":"Customer photo","settings":[{"type":"image_picker","id":"image","label":"Image"}]},
+    {"type":"review","name":"Manual review","settings":[
+      {"type":"range","id":"rating","label":"Rating","min":1,"max":5,"step":1,"default":5},
+      {"type":"text","id":"date","label":"Date"},
+      {"type":"text","id":"heading","label":"Review heading"},
+      {"type":"richtext","id":"text","label":"Review text"},
+      {"type":"text","id":"customer","label":"Customer name"},
+      {"type":"checkbox","id":"verified","label":"Verified buyer","default":true},
+      {"type":"text","id":"product_detail","label":"Frame and size"}
+    ]}
+  ],
+  "presets":[{"name":"TW reviews"}]
+}
+{% endschema %}
+

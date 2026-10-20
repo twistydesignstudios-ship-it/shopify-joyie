@@ -1,0 +1,138 @@
+{% doc %}
+  Product promotion banner controlled by the presence of its theme block.
+
+  @param {object} block - Promotion block with editable content
+{% enddoc %}
+
+{%- liquid
+  assign is_city_poster = false
+  for product_collection in product.collections
+    if product_collection.handle == 'united-states'
+      assign is_city_poster = true
+      break
+    endif
+  endfor
+
+  if is_city_poster
+    assign promotion_link = block.settings.link | default: '/collections/united-states'
+  else
+    assign promotion_link = block.settings.other_link | default: '/collections/personalized-canvas'
+  endif
+
+  assign promotion_end_date = block.settings.end_date
+  if promotion_end_date == blank
+    assign current_timestamp = 'now' | date: '%s' | plus: 0
+    assign promotion_end_timestamp = current_timestamp | plus: 2592000
+    assign promotion_end_date = promotion_end_timestamp | date: '%b %-d, %Y'
+  endif
+-%}
+
+<aside class="tw-product-promotion" aria-label="Promotional offer" {{ block.shopify_attributes }}>
+    <svg class="tw-product-promotion__icon" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M4 9h16v11H4zM3 6h18v3H3zM12 6v14M12 6H8.5a2 2 0 1 1 2-2c0 1.2 1.5 2 1.5 2Zm0 0h3.5a2 2 0 1 0-2-2c0 1.2-1.5 2-1.5 2Z"/>
+    </svg>
+
+    <div class="tw-product-promotion__content">
+      <strong>{{ block.settings.heading | escape }}</strong>
+      {%- if block.settings.details != blank or promotion_end_date != blank -%}
+        <span>
+          {{ block.settings.details | escape }}
+          {%- if promotion_end_date != blank -%}
+            · ends {{ promotion_end_date | escape }}
+          {%- endif -%}
+        </span>
+      {%- endif -%}
+    </div>
+
+    {%- if block.settings.link_label != blank -%}
+      <a href="{{ promotion_link }}">{{ block.settings.link_label | escape }}</a>
+    {%- endif -%}
+</aside>
+
+{% stylesheet %}
+  .tw-product-promotion {
+    display: grid;
+    position: relative;
+    grid-template-columns: 28px minmax(0, 1fr) auto;
+    gap: 14px;
+    align-items: center;
+    margin-bottom: 8px;
+    padding: 20px 24px;
+    border-radius: 12px;
+    background: #214f42;
+    color: #fff8ed;
+    margin-bottom: 28px;
+  }
+
+  .tw-product-promotion::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    bottom: -25px;
+    left: 0;
+    border-bottom: 1px solid #e8e8e1;
+  }
+
+  .tw-product-promotion__icon {
+    width: 25px;
+    height: 25px;
+    fill: none;
+    stroke: #e8b995;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .tw-product-promotion__content {
+    display: grid;
+    gap: 3px;
+    line-height: 1.35;
+  }
+
+  .tw-product-promotion__content strong {
+    color: #fff;
+    font-size: 17px;
+    font-weight: 700;
+  }
+
+  .tw-product-promotion__content span {
+    color: #e4ded5;
+    font-size: 14px;
+  }
+
+  .tw-product-promotion a {
+    color: #f0c49f;
+    font-size: 15px;
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    white-space: nowrap;
+  }
+
+  @media only screen and (max-width: 600px) {
+    .tw-product-promotion {
+      grid-template-columns: 24px minmax(0, 1fr);
+      gap: 10px;
+      padding: 16px;
+    }
+
+    .tw-product-promotion__icon {
+      width: 22px;
+      height: 22px;
+    }
+
+    .tw-product-promotion__content strong {
+      font-size: 15px;
+    }
+
+    .tw-product-promotion__content span,
+    .tw-product-promotion a {
+      font-size: 13px;
+    }
+
+    .tw-product-promotion a {
+      grid-column: 2;
+      width: fit-content;
+    }
+  }
+{% endstylesheet %}

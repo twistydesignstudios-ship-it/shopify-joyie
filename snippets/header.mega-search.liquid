@@ -1,0 +1,18 @@
+<div class="joyie-mega-search">
+  {%- assign mega_search_input_id = 'MegaMenuSearch-' | append: block.id -%}
+  {%- assign mega_search_results_id = 'predictive-search-mega-' | append: block.id -%}
+  {%- if block.settings.search_label != blank -%}
+    <label class="joyie-mega-search__label" for="MegaMenuSearch-{{ block.id }}">{{ block.settings.search_label }}</label>
+  {%- endif -%}
+  {%- render 'form.predictive-search',
+    context: 'city-mega',
+    predictive_search_enabled: true,
+    no_overlay: true,
+    hydration: 'on:interaction="focusin"',
+    input_id: mega_search_input_id,
+    results_id: mega_search_results_id,
+    animate_placeholder: false,
+    input_placeholder: block.settings.search_placeholder
+  -%}
+  {%- if block.settings.search_helper_text != blank -%}<p class="joyie-mega-search__helper">{{ block.settings.search_helper_text }}</p>{%- endif -%}
+</div>

@@ -1,0 +1,387 @@
+<section id="tw-size-guide" class="tw-size-guide" aria-labelledby="tw-size-guide-title-{{ section.id }}">
+  <div class="page-width tw-size-guide__layout">
+    <div class="tw-size-guide__content">
+      {%- if section.settings.eyebrow != blank -%}
+        <p class="tw-size-guide__eyebrow">{{ section.settings.eyebrow }}</p>
+      {%- endif -%}
+      <h2 id="tw-size-guide-title-{{ section.id }}" class="tw-size-guide__title">{{ section.settings.heading }}</h2>
+      {%- if section.settings.text != blank -%}
+        <div class="tw-size-guide__text rte">{{ section.settings.text }}</div>
+      {%- endif -%}
+
+      <div class="tw-size-guide__sizes" aria-label="Available sizes">
+        {%- for block in section.blocks -%}
+          <button
+            type="button"
+            class="tw-size-guide__row{% if block.settings.highlight %} is-highlighted{% endif %}"
+            data-size-guide-choice="{{ forloop.index0 }}"
+            aria-pressed="{% if block.settings.highlight %}true{% else %}false{% endif %}"
+            {{ block.shopify_attributes }}>
+            <div class="tw-size-guide__measurements">
+              <strong>{{ block.settings.imperial }}</strong>
+              <span>{{ block.settings.metric }}</span>
+            </div>
+            <span class="tw-size-guide__placement">{{ block.settings.placement }}</span>
+          </button>
+        {%- endfor -%}
+      </div>
+
+      {%- if section.settings.cta_label != blank -%}
+        <a class="tw-size-guide__cta" href="#product-options">
+          {{ section.settings.cta_label | escape }}
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
+        </a>
+      {%- endif -%}
+    </div>
+
+    <div class="tw-size-guide__visual">
+      {%- if section.settings.room_image != blank -%}
+        {{ section.settings.room_image
+          | image_url: width: 1600
+          | image_tag:
+            class: 'tw-size-guide__room-image',
+            widths: '550, 750, 1100, 1400, 1600',
+            sizes: '(min-width: 769px) 60vw, 100vw',
+            loading: 'lazy',
+            alt: section.settings.room_image.alt
+        }}
+      {%- else -%}
+        <div class="tw-size-guide__frames" aria-hidden="true">
+          {%- for block in section.blocks -%}
+            <div class="tw-size-guide__frame-group{% if block.settings.highlight %} is-highlighted{% endif %}" data-size-guide-frame="{{ forloop.index0 }}">
+              <span class="tw-size-guide__frame-label">{{ block.settings.imperial }}</span>
+              <span class="tw-size-guide__frame" style="--frame-width: {{ block.settings.frame_width }}px; --frame-height: {{ block.settings.frame_height }}px;"></span>
+            </div>
+          {%- endfor -%}
+        </div>
+        <div class="tw-size-guide__sofa" aria-hidden="true">
+          <span class="tw-size-guide__sofa-back"></span>
+          <span class="tw-size-guide__sofa-seat"></span>
+          <span class="tw-size-guide__sofa-leg tw-size-guide__sofa-leg--left"></span>
+          <span class="tw-size-guide__sofa-leg tw-size-guide__sofa-leg--right"></span>
+        </div>
+        <span class="tw-size-guide__floor" aria-hidden="true"></span>
+        {%- if section.settings.scale_note != blank -%}
+          <span class="tw-size-guide__scale-note">{{ section.settings.scale_note }}</span>
+        {%- endif -%}
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% style %}
+  #shopify-section-{{ section.id }} .tw-size-guide {
+    margin-top: {{ section.settings.section_gap }}px;
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+    background: {{ section.settings.background }};
+  }
+  #shopify-section-{{ section.id }} .tw-size-guide__layout {
+    display: grid;
+    grid-template-columns: minmax(300px, 420px) minmax(0, 1fr);
+    align-items: center;
+    gap: 64px;
+  }
+  #shopify-section-{{ section.id }} .tw-size-guide__eyebrow {
+    margin: 0 0 9px;
+    color: #c65029;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .14em;
+  }
+  #shopify-section-{{ section.id }} .tw-size-guide__title {
+    margin: 0;
+    font-size: clamp(27px, 2.2vw, 34px);
+    line-height: 1.18;
+    letter-spacing: -.015em;
+  }
+  #shopify-section-{{ section.id }} .tw-size-guide__text {
+    margin-top: 12px;
+    color: #4a4641;
+    font-size: 16px;
+    line-height: 1.55;
+  }
+  #shopify-section-{{ section.id }} .tw-size-guide__sizes {
+    display: grid;
+    gap: 8px;
+    margin-top: 28px;
+  }
+  #shopify-section-{{ section.id }} .tw-size-guide__row {
+    display: flex;
+    min-height: 52px;
+    padding: 10px 16px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    border: 1px solid #e8e8e1;
+    border-radius: 8px;
+    background: #fff;
+    width: 100%;
+    appearance: none;
+    color: #1c1d1d;
+    font-family: inherit;
+    letter-spacing: 0;
+    text-transform: none;
+    text-align: left;
+    cursor: pointer;
+  }
+  #shopify-section-{{ section.id }} .tw-size-guide__row:hover {
+    border-color: #d8b7a8;
+  }
+  #shopify-section-{{ section.id }} .tw-size-guide__row:focus-visible {
+    outline: 2px solid #c65029;
+    outline-offset: 2px;
+  }
+  #shopify-section-{{ section.id }} .tw-size-guide__row.is-highlighted {
+    border: 1.5px solid #c65029;
+    background: #fffaf5;
+  }
+  #shopify-section-{{ section.id }} .tw-size-guide__measurements {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    white-space: nowrap;
+  }
+  #shopify-section-{{ section.id }} .tw-size-guide__measurements strong { font-size: 15px; }
+  #shopify-section-{{ section.id }} .tw-size-guide__measurements span,
+  #shopify-section-{{ section.id }} .tw-size-guide__placement {
+    color: #6b6660;
+    font-size: 13px;
+  }
+  #shopify-section-{{ section.id }} .tw-size-guide__placement { text-align: right; }
+  #shopify-section-{{ section.id }} .tw-size-guide__cta {
+    display: inline-flex;
+    min-height: 52px;
+    margin-top: 20px;
+    padding: 0 24px;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    border-radius: 999px;
+    background: #007a5c;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 800;
+    line-height: 1;
+    text-decoration: none;
+  }
+  #shopify-section-{{ section.id }} .tw-size-guide__cta:hover {
+    background: #006a50;
+    color: #fff;
+  }
+  #shopify-section-{{ section.id }} .tw-size-guide__cta svg {
+    width: 18px;
+    height: 18px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  #shopify-section-{{ section.id }} .tw-size-guide__visual {
+    position: relative;
+    min-height: 520px;
+    overflow: hidden;
+    border-radius: 12px;
+    background: linear-gradient(180deg, #efe7dd, #e7ddd1);
+  }
+  #shopify-section-{{ section.id }} .tw-size-guide__room-image {
+    display: block;
+    width: 100%;
+    height: 520px;
+    object-fit: cover;
+  }
+  #shopify-section-{{ section.id }} .tw-size-guide__frames {
+    position: absolute;
+    z-index: 2;
+    top: 40px;
+    right: 24px;
+    left: 24px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: clamp(10px, 2vw, 22px);
+  }
+  #shopify-section-{{ section.id }} .tw-size-guide__frame-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+  #shopify-section-{{ section.id }} .tw-size-guide__frame-label {
+    display: inline-flex;
+    height: 26px;
+    padding: 0 10px;
+    align-items: center;
+    border-radius: 50px;
+    background: rgba(255,255,255,.9);
+    font-size: 12px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  #shopify-section-{{ section.id }} .tw-size-guide__frame-group.is-highlighted .tw-size-guide__frame-label {
+    background: #c65029;
+    color: #fff;
+  }
+  #shopify-section-{{ section.id }} .tw-size-guide__frame {
+    display: block;
+    width: var(--frame-width);
+    height: var(--frame-height);
+    padding: clamp(3px, .5vw, 8px);
+    background: #1e1e1e;
+    box-shadow: 0 6px 14px rgba(60,40,25,.18);
+  }
+  #shopify-section-{{ section.id }} .tw-size-guide__frame::after {
+    content: '';
+    display: block;
+    width: 100%;
+    height: 100%;
+    background: #fffbf4;
+  }
+  #shopify-section-{{ section.id }} .tw-size-guide__frame-group.is-highlighted .tw-size-guide__frame {
+    outline: 2px solid #c65029;
+    outline-offset: 4px;
+  }
+  #shopify-section-{{ section.id }} .tw-size-guide__sofa {
+    position: absolute;
+    z-index: 1;
+    bottom: 36px;
+    left: 50%;
+    width: min(72%, 538px);
+    height: 150px;
+    transform: translateX(-50%);
+  }
+  #shopify-section-{{ section.id }} .tw-size-guide__sofa-back,
+  #shopify-section-{{ section.id }} .tw-size-guide__sofa-seat,
+  #shopify-section-{{ section.id }} .tw-size-guide__sofa-leg { position: absolute; display: block; }
+  #shopify-section-{{ section.id }} .tw-size-guide__sofa-back {
+    top: 0; right: 0; left: 0; height: 70px; border-radius: 22px 22px 6px 6px; background: #b9a48f;
+  }
+  #shopify-section-{{ section.id }} .tw-size-guide__sofa-seat {
+    top: 54px; right: -14px; left: -14px; height: 72px; border-radius: 16px; background: #a99480;
+  }
+  #shopify-section-{{ section.id }} .tw-size-guide__sofa-leg { bottom: 0; width: 10px; height: 26px; background: #7a6654; }
+  #shopify-section-{{ section.id }} .tw-size-guide__sofa-leg--left { left: 18px; }
+  #shopify-section-{{ section.id }} .tw-size-guide__sofa-leg--right { right: 18px; }
+  #shopify-section-{{ section.id }} .tw-size-guide__floor {
+    position: absolute; right: 0; bottom: 0; left: 0; height: 36px; background: #d7c7b5;
+  }
+  #shopify-section-{{ section.id }} .tw-size-guide__scale-note {
+    position: absolute;
+    z-index: 3;
+    right: 16px;
+    bottom: 50px;
+    padding: 4px 10px;
+    border-radius: 50px;
+    background: rgba(255,255,255,.82);
+    color: #6b6660;
+    font-size: 12px;
+  }
+  @media screen and (max-width: 900px) {
+    #shopify-section-{{ section.id }} .tw-size-guide__layout { grid-template-columns: 1fr; gap: 36px; }
+    #shopify-section-{{ section.id }} .tw-size-guide__content { order: 1; }
+    #shopify-section-{{ section.id }} .tw-size-guide__visual { order: 2; }
+  }
+  @media screen and (max-width: 600px) {
+    #shopify-section-{{ section.id }} .tw-size-guide {
+      margin-top: {{ section.settings.section_gap_mobile }}px;
+      padding-top: {{ section.settings.padding_top_mobile }}px;
+      padding-bottom: {{ section.settings.padding_bottom_mobile }}px;
+    }
+    #shopify-section-{{ section.id }} .tw-size-guide__layout { gap: 0; }
+    #shopify-section-{{ section.id }} .tw-size-guide__content { display: contents; }
+    #shopify-section-{{ section.id }} .tw-size-guide__eyebrow { order: 1; }
+    #shopify-section-{{ section.id }} .tw-size-guide__title { order: 2; }
+    #shopify-section-{{ section.id }} .tw-size-guide__text { order: 3; }
+    #shopify-section-{{ section.id }} .tw-size-guide__visual { order: 4; min-height: 390px; margin-top: 28px; }
+    #shopify-section-{{ section.id }} .tw-size-guide__sizes { order: 5; }
+    #shopify-section-{{ section.id }} .tw-size-guide__cta { order: 6; }
+    #shopify-section-{{ section.id }} .tw-size-guide__room-image { height: 390px; }
+    #shopify-section-{{ section.id }} .tw-size-guide__frames { top: 32px; right: 12px; left: 12px; gap: 7px; transform: scale(.7); transform-origin: top center; }
+    #shopify-section-{{ section.id }} .tw-size-guide__sofa { width: 78%; transform: translateX(-50%) scale(.82); transform-origin: bottom center; }
+    #shopify-section-{{ section.id }} .tw-size-guide__measurements { gap: 6px; }
+    #shopify-section-{{ section.id }} .tw-size-guide__cta { width: 100%; }
+  }
+  @media screen and (max-width: 430px) {
+    #shopify-section-{{ section.id }} .tw-size-guide__frames {
+      right: 0;
+      left: 0;
+      gap: 6px;
+      transform: scale(.55);
+    }
+  }
+{% endstyle %}
+
+<script>
+  (() => {
+    const sectionId = 'shopify-section-{{ section.id }}';
+
+    const initSizeGuide = (root = document) => {
+      const section = root.id === sectionId ? root : root.querySelector(`#${sectionId}`);
+      if (!section || section.dataset.sizeGuideReady === 'true') return;
+
+      const choices = [...section.querySelectorAll('[data-size-guide-choice]')];
+      const frames = [...section.querySelectorAll('[data-size-guide-frame]')];
+      if (!choices.length) return;
+
+      const selectSize = (index) => {
+        choices.forEach((choice) => {
+          const selected = choice.dataset.sizeGuideChoice === index;
+          choice.classList.toggle('is-highlighted', selected);
+          choice.setAttribute('aria-pressed', selected ? 'true' : 'false');
+        });
+        frames.forEach((frame) => {
+          frame.classList.toggle('is-highlighted', frame.dataset.sizeGuideFrame === index);
+        });
+      };
+
+      choices.forEach((choice) => {
+        choice.addEventListener('click', () => selectSize(choice.dataset.sizeGuideChoice));
+      });
+
+      section.dataset.sizeGuideReady = 'true';
+    };
+
+    initSizeGuide();
+    document.addEventListener('shopify:section:load', (event) => initSizeGuide(event.target));
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "TW size guide",
+  "max_blocks": 5,
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "SIZE GUIDE" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "See the size on her wall" },
+    { "type": "richtext", "id": "text", "label": "Description", "default": "<p>Every frame drawn to scale against an 84-inch sofa, so there are no surprises when it arrives.</p>" },
+    { "type": "image_picker", "id": "room_image", "label": "Optional room image", "info": "Leave blank to use the lightweight illustrated size comparison." },
+    { "type": "text", "id": "scale_note", "label": "Scale note", "default": "Sofa shown 84\" wide for scale" },
+    { "type": "text", "id": "cta_label", "label": "Button label", "default": "Choose your size & buy now" },
+    { "type": "color", "id": "background", "label": "Background", "default": "#fffaf5" },
+    { "type": "header", "content": "Desktop spacing" },
+    { "type": "range", "id": "section_gap", "label": "Space above section", "min": 0, "max": 120, "step": 4, "unit": "px", "default": 32 },
+    { "type": "range", "id": "padding_top", "label": "Top padding", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 64 },
+    { "type": "range", "id": "padding_bottom", "label": "Bottom padding", "min": 0, "max": 160, "step": 4, "unit": "px", "default": 64 },
+    { "type": "header", "content": "Mobile spacing" },
+    { "type": "range", "id": "section_gap_mobile", "label": "Space above section", "min": 0, "max": 80, "step": 4, "unit": "px", "default": 20 },
+    { "type": "range", "id": "padding_top_mobile", "label": "Top padding", "min": 0, "max": 100, "step": 4, "unit": "px", "default": 40 },
+    { "type": "range", "id": "padding_bottom_mobile", "label": "Bottom padding", "min": 0, "max": 100, "step": 4, "unit": "px", "default": 40 }
+  ],
+  "blocks": [
+    {
+      "type": "size",
+      "name": "Size",
+      "settings": [
+        { "type": "text", "id": "imperial", "label": "Imperial size", "default": "12×16\"" },
+        { "type": "text", "id": "metric", "label": "Metric size", "default": "30×40 cm" },
+        { "type": "text", "id": "placement", "label": "Suggested placement", "default": "Gallery wall, hallway" },
+        { "type": "checkbox", "id": "highlight", "label": "Highlight this size", "default": false },
+        { "type": "range", "id": "frame_width", "label": "Visual frame width", "min": 40, "max": 170, "step": 2, "unit": "px", "default": 78 },
+        { "type": "range", "id": "frame_height", "label": "Visual frame height", "min": 60, "max": 220, "step": 2, "unit": "px", "default": 102 }
+      ]
+    }
+  ],
+  "presets": [{ "name": "TW size guide" }]
+}
+{% endschema %}

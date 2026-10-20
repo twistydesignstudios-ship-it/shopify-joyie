@@ -1,0 +1,61 @@
+{% doc %}
+  Compact product rating link that jumps to the reviews section.
+
+  @param {object} block - Product review summary block
+{% enddoc %}
+
+{%- liquid
+  assign rating = block.settings.rating | default: '4.9'
+-%}
+
+<a class="tw-product-review-summary" href="#reviews" {{ block.shopify_attributes }}>
+  <span class="tw-product-review-summary__stars" aria-hidden="true">★★★★★</span>
+  <strong>{{ rating | escape }}</strong>
+  <span class="tw-product-review-summary__count">Reviews</span>
+  <span class="visually-hidden">{{ rating | escape }} out of 5 stars. Read reviews</span>
+</a>
+
+{% stylesheet %}
+  html {
+    scroll-behavior: smooth;
+  }
+
+  #reviews {
+    scroll-margin-top: 24px;
+  }
+
+  .tw-product-review-summary {
+    display: inline-flex;
+    width: fit-content;
+    align-items: center;
+    gap: 10px;
+    color: var(--color-primary);
+    font-size: 16px;
+    line-height: 1.2;
+    text-decoration: none;
+  }
+
+  .tw-product-review-summary__stars {
+    color: #c65029;
+    font-size: 18px;
+    letter-spacing: 3px;
+  }
+
+  .tw-product-review-summary__count {
+    color: var(--color-primary);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  @media only screen and (max-width: 480px) {
+    .tw-product-review-summary {
+      gap: 7px;
+      font-size: 14px;
+    }
+
+    .tw-product-review-summary__stars {
+      font-size: 15px;
+      letter-spacing: 2px;
+    }
+  }
+{% endstylesheet %}

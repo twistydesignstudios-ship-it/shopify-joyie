@@ -1,0 +1,246 @@
+.footer__title {
+  font-weight: bold;
+  font-size: var(--body-font-size) !important;
+}
+
+.site-header__element--sub {
+  box-shadow: 0 0 25px rgb(0 0 0 / 10%);
+}
+
+.element-badge--sale {
+  display: none !important;
+}
+
+[id$='__slideshow-split'] .element-button:not(.element-button--transparent) {
+  --element-button-color-primary: var(--color-sale-tag);
+  --element-button-color-secondary: var(--color-sale-tag-text);
+  background-color: var(--color-sale-tag) !important;
+  border-color: var(--color-sale-tag) !important;
+  color: var(--color-sale-tag-text) !important;
+}
+
+@media only screen and (min-width: 769px) {
+  .header-wrapper--compressed .site-header__element--sub[data-type='nav'] {
+    display: block;
+    transform: translateY(0);
+  }
+
+  .header-wrapper--compressed .header-item--compress-nav,
+  .header-wrapper--compressed .header-item--search .site-nav__compress-menu {
+    display: none;
+    visibility: hidden;
+    width: 0;
+    opacity: 0;
+  }
+
+  .site-header__element--sub[data-type='nav'] .site-nav > .site-nav__item:first-child > .site-nav__link,
+  .site-header__element--sub[data-type='nav'] .site-nav > .site-nav__item:first-child > nav-dropdown > .site-nav__details > .site-nav__link {
+    padding-left: 0;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .header-section.mobile-search-header-lock {
+    position: fixed !important;
+    top: var(--mobile-search-viewport-top, 0px) !important;
+    right: 0;
+    left: 0;
+    width: 100%;
+    z-index: var(--z-index-header);
+    transform: translateZ(0);
+  }
+
+  .header-section.mobile-search-header-lock .site-header__element--sub[data-type='search'] {
+    display: block !important;
+    transform: translateY(0) !important;
+  }
+
+  .header-wrapper--compressed .site-header__element--sub[data-type='search'] {
+    display: block !important;
+    transform: translateY(0) !important;
+  }
+
+  .header-layout[data-nav='below'] .js-search-header {
+    display: none !important;
+  }
+}
+
+.type-banner .promo-grid__container {
+  align-items: center;
+  height: 100%;
+}
+
+.type-banner__text {
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.flex-grid__item--75 .type-banner__text,
+.flex-grid__item--100 .type-banner__text {
+  flex-direction: row;
+}
+
+.type-banner__text h2,
+.type-banner__text p {
+  margin: 0;
+}
+
+.type-banner__text .element-button {
+  margin: 0;
+}
+
+.collection-hero__content.overlay {
+  --element-text-color: rgb(255,255,255);
+  --color-secondary: rgb(0,0,0, 0.6);
+}
+
+.element-input:not(.element-input--transparent) {
+  --element-input-color-primary: var(--root-color-primary, #000);
+  --element-input-color-secondary: var(--root-color-secondary, #fff);
+}
+
+.newsletter__input-group .element-input~button {
+  --element-button-height: initial;
+}
+
+.newsletter-section .element-text.element-text--heading-h0 {
+  font-size: var(--element-text-font-size--heading-2xl);
+  line-height: var(--element-text-line-height--heading-2xl);
+}
+
+.newsletter-section .element-text.element-text--heading-h1 {
+  font-size: var(--element-text-font-size--heading-xl);
+  line-height: var(--element-text-line-height--heading-xl);
+}
+
+.newsletter-section .element-text.element-text--heading-h2 {
+  font-size: var(--element-text-font-size--heading-lg);
+  line-height: var(--element-text-line-height--heading-lg);
+}
+
+.newsletter-section .element-text.element-text--heading-h3 {
+  font-size: var(--element-text-font-size--heading-md);
+  line-height: var(--element-text-line-height--heading-md);
+}
+
+.text-with-icons__block-text a,
+.newsletter-section__content a {
+  text-decoration: underline;
+}
+
+@media only screen and (min-width: 769px) {
+  .collection-grid[data-view='medium'] > .grid-item {
+    flex: 0 0 25%;
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .product-grid__content {
+    --pdp-title-size: 16px;
+  }
+
+  input:not([type]),
+  input[type='text'],
+  input[type='search'],
+  input[type='email'],
+  input[type='tel'],
+  input[type='url'],
+  input[type='number'],
+  input[type='password'],
+  input[type='date'],
+  input[type='datetime-local'],
+  input[type='month'],
+  input[type='time'],
+  input[type='week'],
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
+}
+/* Cart checkout button sizing */
+.cart__checkout {
+  min-height: 52px;
+  
+}
+.cart__checkout span{
+font-size: 18px !important;
+}
+/* Keep the open cart drawer above preview widgets and floating apps. */
+.header-section:has(.site-header__cart.is-active),
+.site-header__drawer.site-header__cart.is-active,
+.site-header__drawer.site-header__cart.is-closing {
+  z-index: 2147483647 !important;
+}
+
+/* Improve quantity control visibility in the cart. */
+.cart__item-quantity .element-quantity-selector__input {
+  border: 1px solid #9f9a94 !important;
+}
+
+/* Collapsible TeeInBlue line-item properties. */
+.cart__item-details {
+  margin: 2px 0 10px;
+}
+
+.cart__item-details-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #c65029;
+  font-size: calc(var(--element-text-font-size--body-md) - 1px);
+  font-weight: 600;
+  line-height: 1.3;
+  cursor: pointer;
+  list-style: none;
+  border-bottom:1px solid #c65029;
+}
+
+.cart__item-details-toggle::-webkit-details-marker {
+  display: none;
+}
+
+.cart__item-details-label--open {
+  display: none;
+}
+
+.cart__item-details[open] .cart__item-details-label--closed {
+  display: none;
+}
+
+.cart__item-details[open] .cart__item-details-label--open {
+  display: inline;
+}
+
+.cart__item-details-icon {
+  width: 7px;
+  height: 7px;
+  border-right: 1.5px solid currentColor;
+  border-bottom: 1.5px solid currentColor;
+  transform: translateY(-2px) rotate(45deg);
+  transition: transform 0.2s ease;
+}
+
+.cart__item-details[open] .cart__item-details-icon {
+  transform: translateY(2px) rotate(225deg);
+}
+
+.cart__item-details-content {
+  padding-top: 7px;
+}
+
+.cart__item-details-content .cart__item--properties {
+  margin-bottom: 5px;
+  overflow-wrap: anywhere;
+}
+
+.cart__item-details-content .cart__item--properties:last-child {
+  margin-bottom: 0;
+}
+
+/* Product title: full text stays in the H1 for SEO, only 2 lines shown */
+.product-title-block h1.element-text {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}

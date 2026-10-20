@@ -1,0 +1,178 @@
+{%- liquid
+  assign promotion_end_date = section.settings.end_date
+  if promotion_end_date == blank
+    assign current_timestamp = 'now' | date: '%s' | plus: 0
+    assign promotion_end_timestamp = current_timestamp | plus: 2592000
+    assign promotion_end_date = promotion_end_timestamp | date: '%b %-d, %Y'
+  endif
+-%}
+
+<style>
+  [id$="__collection-header"],
+  [id$="__collection-header"] > .color-scheme-none,
+  [id$="__collection-header"] .page-content,
+  [id$="__collection-header"] collection-header,
+  [id$="__collection-header"] .collection-hero {
+    background-color: #fffaf5;
+  }
+</style>
+
+<section class="tw-city-promo-section">
+  <div class="page-width">
+    <aside class="tw-city-promo" aria-label="City poster promotional offer">
+      <svg class="tw-city-promo__icon" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M4 9h16v11H4zM3 6h18v3H3zM12 6v14M12 6H8.5a2 2 0 1 1 2-2c0 1.2 1.5 2 1.5 2Zm0 0h3.5a2 2 0 1 0-2-2c0 1.2-1.5 2-1.5 2Z"/>
+      </svg>
+
+      <div class="tw-city-promo__content">
+        <strong>{{ section.settings.heading | escape }}</strong>
+        <span>
+          {{ section.settings.details | escape }}
+          {%- if promotion_end_date != blank -%}
+            &nbsp;· Ends {{ promotion_end_date | escape }}
+          {%- endif -%}
+        </span>
+      </div>
+
+      <div class="tw-city-promo__action">
+        {%- if section.settings.link_label != blank -%}
+          <a href="{{ section.settings.link | default: '#main-collection' }}">
+            {{ section.settings.link_label | escape }}
+          </a>
+        {%- endif -%}
+      </div>
+    </aside>
+  </div>
+</section>
+
+{% stylesheet %}
+  .tw-city-promo-section {
+    padding-block: 6px 0;
+  }
+
+  .tw-city-promo {
+    display: grid;
+    grid-template-columns: 26px minmax(0, 1fr) auto;
+    gap: 14px;
+    align-items: center;
+    padding: 18px 26px;
+    border-radius: 14px;
+    background: #214f42;
+    color: #fff8ed;
+  }
+
+  .tw-city-promo__icon {
+    width: 22px;
+    height: 22px;
+    fill: none;
+    stroke: #f0c49f;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .tw-city-promo__content {
+    display: flex;
+    min-width: 0;
+    align-items: baseline;
+    gap: 18px;
+    line-height: 1.35;
+  }
+
+  .tw-city-promo__content strong {
+    flex: 0 0 auto;
+    color: #fff;
+    font-size: 17px;
+    font-weight: 700;
+  }
+
+  .tw-city-promo__content span {
+    color: #f1e9df;
+    font-size: 16px;
+  }
+
+  .tw-city-promo__action {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+
+  .tw-city-promo__action a {
+    color: #f0c49f;
+    font-size: 15px;
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    white-space: nowrap;
+  }
+
+  @media only screen and (max-width: 767px) {
+    .tw-city-promo {
+      grid-template-columns: 24px minmax(0, 1fr);
+      gap: 10px;
+      padding: 15px 16px;
+    }
+
+    .tw-city-promo__content {
+      display: grid;
+      gap: 3px;
+    }
+
+    .tw-city-promo__content strong {
+      font-size: 15px;
+    }
+
+    .tw-city-promo__content span,
+    .tw-city-promo__action a {
+      font-size: 13px;
+    }
+
+    .tw-city-promo__action {
+      grid-column: 2;
+      justify-content: space-between;
+      gap: 12px;
+    }
+  }
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "City poster promotion",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Buy 2 city posters, get 1 free"
+    },
+    {
+      "type": "text",
+      "id": "details",
+      "label": "Details",
+      "default": "Applied at checkout · Can’t be combined with other discounts"
+    },
+    {
+      "type": "text",
+      "id": "end_date",
+      "label": "End date",
+      "info": "Leave blank to automatically show one month from today."
+    },
+    {
+      "type": "text",
+      "id": "link_label",
+      "label": "Link label",
+      "default": "How it works"
+    },
+    {
+      "type": "url",
+      "id": "link",
+      "label": "Link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "City poster promotion"
+    }
+  ]
+}
+{% endschema %}

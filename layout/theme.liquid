@@ -1,0 +1,316 @@
+<!doctype html>
+<html class="no-js" lang="{{ request.locale.iso_code }}" dir="{{ settings.text_direction }}">
+  <head>
+
+    {%- if template contains 'product' -%}
+      {% unless product.metafields.teeinblue.platform_product == blank
+        and product.metafields.teeinblue.campaign_version == blank
+      %}
+        <script>
+          (() => {
+            const BLOCKED_SCRIPT_PATTERNS = ['rappi-front.js', '/rappi-', 'rappi-front', 'app-v1'];
+
+            const isBlockedScript = (value) => {
+              if (!value) return false;
+
+              const url = String(value);
+
+              return BLOCKED_SCRIPT_PATTERNS.some((pattern) => url.includes(pattern));
+            };
+
+            const blockScriptElement = (node) => {
+              if (!(node instanceof HTMLScriptElement)) return false;
+
+              const src = node.getAttribute('src') || node.src || '';
+
+              if (!isBlockedScript(src)) return false;
+
+              console.warn('[RAPPI BLOCKED]', src);
+
+              node.type = 'javascript/blocked';
+              node.removeAttribute('src');
+
+              return true;
+            };
+
+            /* Block script.src = "..." */
+            const srcDescriptor = Object.getOwnPropertyDescriptor(HTMLScriptElement.prototype, 'src');
+
+            if (srcDescriptor?.set && srcDescriptor?.get) {
+              Object.defineProperty(HTMLScriptElement.prototype, 'src', {
+                configurable: true,
+                enumerable: srcDescriptor.enumerable,
+
+                get() {
+                  return srcDescriptor.get.call(this);
+                },
+
+                set(value) {
+                  if (isBlockedScript(value)) {
+                    console.warn('[BLOCK]', value);
+
+                    this.type = 'javascript/blocked';
+                    this.dataset.blockedSrc = value;
+
+                    return;
+                  }
+
+                  return srcDescriptor.set.call(this, value);
+                },
+              });
+            }
+
+            /* Block setAttribute("src", ...) */
+            const originalSetAttribute = HTMLScriptElement.prototype.setAttribute;
+
+            HTMLScriptElement.prototype.setAttribute = function (name, value) {
+              if (String(name).toLowerCase() === 'src' && isBlockedScript(value)) {
+                console.warn('[BLOCKED: setAttribute]', value);
+
+                this.type = 'javascript/blocked';
+                this.dataset.blockedSrc = value;
+
+                return;
+              }
+
+              return originalSetAttribute.call(this, name, value);
+            };
+
+            /* Block appendChild */
+            const originalAppendChild = Node.prototype.appendChild;
+
+            Node.prototype.appendChild = function (node) {
+              if (blockScriptElement(node)) {
+                return node;
+              }
+
+              return originalAppendChild.call(this, node);
+            };
+
+            /* Block insertBefore */
+            const originalInsertBefore = Node.prototype.insertBefore;
+
+            Node.prototype.insertBefore = function (node, referenceNode) {
+              if (blockScriptElement(node)) {
+                return node;
+              }
+
+              return originalInsertBefore.call(this, node, referenceNode);
+            };
+
+            /* Block replaceChild */
+            const originalReplaceChild = Node.prototype.replaceChild;
+
+            Node.prototype.replaceChild = function (newChild, oldChild) {
+              if (blockScriptElement(newChild)) {
+                return oldChild;
+              }
+
+              return originalReplaceChild.call(this, newChild, oldChild);
+            };
+
+            /* Backup observer */
+            const observer = new MutationObserver((mutations) => {
+              for (const mutation of mutations) {
+                for (const node of mutation.addedNodes) {
+                  if (!(node instanceof Element)) continue;
+
+                  if (node instanceof HTMLScriptElement && isBlockedScript(node.getAttribute('src') || node.src)) {
+                    console.warn('[REMOVED]', node.src);
+                    node.remove();
+                  }
+
+                  node.querySelectorAll?.('script[src]').forEach((script) => {
+                    if (isBlockedScript(script.src)) {
+                      console.warn('[REMOVED]', script.src);
+
+                      script.remove();
+                    }
+                  });
+                }
+              }
+            });
+
+            observer.observe(document.documentElement, {
+              childList: true,
+              subtree: true,
+            });
+
+            /* Block fetch */
+            const originalFetch = window.fetch;
+
+            window.fetch = function (input, init) {
+              const url = typeof input === 'string' ? input : input?.url;
+
+              if (isBlockedScript(url)) {
+                console.warn('[BLOCKED: fetch]', url);
+
+                return Promise.reject(new Error('Request blocked'));
+              }
+
+              return originalFetch.call(this, input, init);
+            };
+
+            /* Block XHR */
+            const originalXHROpen = XMLHttpRequest.prototype.open;
+
+            XMLHttpRequest.prototype.open = function (method, url, ...args) {
+              if (isBlockedScript(url)) {
+                console.warn('[BLOCKED: XHR]', url);
+
+                url = 'about:blank';
+              }
+
+              return originalXHROpen.call(this, method, url, ...args);
+            };
+
+            /* Block cart_changed */
+            const originalDispatchEvent = window.dispatchEvent;
+
+            window.dispatchEvent = function (event) {
+              if (event?.type === 'cart_changed') {
+                console.warn('[BLOCKED EVENT] cart_changed');
+
+                return false;
+              }
+
+              return originalDispatchEvent.call(this, event);
+            };
+          })();
+        </script>
+      {% endunless %}
+    {%- endif -%}
+
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="theme-color" content="{{ settings.color_button }}">
+    <link rel="canonical" href="{{ canonical_url }}">
+    <link rel="preconnect" href="https://fonts.shopifycdn.com" crossorigin>
+    <link rel="dns-prefetch" href="https://ajax.googleapis.com">
+    <link rel="dns-prefetch" href="https://maps.googleapis.com">
+    <link rel="dns-prefetch" href="https://maps.gstatic.com">
+
+    {%- if settings.favicon != blank -%}
+      <link rel="shortcut icon" href="{{ settings.favicon | img_url: '32x32' }}" type="image/png">
+    {%- endif -%}
+
+    {%- render 'head.page-title' -%}
+
+    {%- if page_description -%}
+      <meta name="description" content="{{ page_description | escape }}">
+    {%- endif -%}
+
+    {%- render 'head.social-meta-tags' -%}
+
+    {%- style -%}
+      :root {
+        --product-grid-padding: 12px;
+      }
+    {%- endstyle -%}
+
+    <script>
+      document.documentElement.className = document.documentElement.className.replace('no-js', 'js');
+
+      window.theme = window.theme || {};
+
+      theme.settings = {
+        themeName: 'Expanse',
+        themeVersion: '10.0.1', // x-release-please-version
+      };
+    </script>
+
+    {%- render 'head.import-map' -%}
+    {%- render 'head.es-module-shims' -%}
+    {%- render 'head.is-land' -%}
+    {%- render 'head.preload-js' -%}
+    {%- render 'head.theme-editor' -%}
+
+    {{ content_for_header }}
+
+    <link rel="stylesheet" href="{{ 'theme.css' | asset_url }}">
+    {%- render 'head.styles' -%}
+    {%- render 'head.styles.kit-tokens' -%}
+    {%- render 'utility.stylesheet', name: 'overrides.css', load: 'inline' -%}
+
+    <script src="{{ 'theme.js' | asset_url }}" defer="defer"></script>
+    {%- comment -%} Disabled for LCP/performance: animated search placeholder. Re-enable together with snippets/form.predictive-search.liquid {%- endcomment -%}
+    {%- comment -%}<script src="{{ 'search-placeholder.js' | asset_url }}" defer="defer"></script>{%- endcomment -%}
+    <script src="{{ 'mobile-search-header.js' | asset_url }}" defer="defer"></script>
+
+    {%- if request.page_type contains 'customers/' -%}
+      <script src="{{ 'shopify_common.js' | shopify_asset_url }}" defer="defer"></script>
+    {%- endif -%}
+
+    {% if request.design_mode %}
+      <script>
+        theme.settings.email = {{ shop.email | json }}
+      </script>
+      <script src="https://api.archetypethemes.co/design-mode.js" defer="defer"></script>
+    {% endif %}
+    
+    {%- if request.page_type == 'product' -%}
+    {{ 'teeinblue-custom.css' | asset_url | stylesheet_tag }}
+    <script src="{{ 'tee-sticky-gallery.js' | asset_url }}" defer="defer"></script>
+    {% endif %}
+    {%- if template.name == 'index' -%}
+      <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          "name": "JOYIE",
+          "url": "{{ shop.url }}",
+          "logo": "{{ settings.logo | image_url: width: 600 | prepend: 'https:' }}",
+          "email": "support@joyie.co",
+          "sameAs": [
+            "https://www.instagram.com/joyie.co",
+            "https://www.facebook.com/JOYIE.CO",
+            "https://www.pinterest.com/Joyie_shop/"
+          ]
+        }
+      </script>
+      <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          "url": "{{ shop.url }}",
+          "potentialAction": {
+            "@type": "SearchAction",
+            "target": "{{ shop.url }}/search?q={search_term_string}",
+            "query-input": "required name=search_term_string"
+          }
+        }
+      </script>
+    {%- endif -%}
+  </head>
+
+  <body
+    class="template-{{ template | replace: '.', ' ' | truncatewords: 1, '' | handle }}{% if request.path == '/challenge' %} template-challange{% endif %}"
+    data-button_style="{{ settings.button_style }}"
+    data-edges="{{ settings.roundness }}"
+    data-type_header_capitalize="{{ settings.type_header_capitalize }}"
+    data-swatch_style="{{ settings.swatch_style }}"
+    data-grid-style="{{ settings.product_grid_style }}"
+  >
+    <a class="in-page-link visually-hidden skip-link" href="#MainContent">{{ 'actions.skip_to_content' | t }}</a>
+
+    <div id="PageContainer" class="page-container">
+      <div class="transition-body">
+        {%- sections 'header-group' -%}
+        {%- sections 'popup-group' -%}
+
+        <main class="main-content" id="MainContent">
+          {{ content_for_layout }}
+        </main>
+
+        {%- sections 'footer-group' -%}
+      </div>
+    </div>
+
+    {%- liquid
+      render 'product.gallery.photoswipe-template'
+      render 'overlay.tool-tip'
+    -%}
+  </body>
+</html>
